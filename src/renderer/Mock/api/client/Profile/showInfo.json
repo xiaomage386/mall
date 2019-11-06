@@ -1,0 +1,33 @@
+{
+	"uid|1-100": 1,
+	"icon": "@image(50x50, @color)",
+	"nickname": "@cname()",
+	"cover": "@image(375x225, @color)",
+	"phone": "@integer(13500000000, 13599999999)",
+	"dept_id|1-100": 1,
+	"dept_name": "@ctitle(2,5)部",
+	"job_coding" : "IC@integer(100, 10000)",
+	"sex|1-2": 1,
+	"age|18-60": 1,
+	"height|150-200": 175,
+	"weight|40-100": 65,
+	"step_aim|10000-20000": 10000,
+	"step_n|100000-200000": 100000,
+	"step_today": {
+		"step_n|1000-8000": 1000,
+		"dist|500-3000": 1000,
+		"cal|50-200": 100,
+		"order|0-100" : 1,
+		"like_n|1-100": 1
+	},
+	"honor": {
+		"id|1-4": 1,
+		"name": "5公里长跑运动员",
+		"descr": "5公里长跑运动员",
+		"icon": "@image('375x98', '#fb3252')"
+	},
+	"level|1-10": 1,
+	"cal_base|1-100": 1,
+	"fixed_honor_n|0-5": 1,
+	"act_honor_n|0-5": 1
+}

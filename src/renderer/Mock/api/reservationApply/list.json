@@ -1,0 +1,69 @@
+{
+    "msg": "success",
+    "code": 0,
+    "object": [
+        {
+            "timeSlot": "08:00-08:30",
+            "list": [
+                {
+                    "name": "张三",
+                    "id": 4,
+                    "applyDate": "2019-11-05 08:07:00",
+                    "checkProject": "1"
+                }
+            ]
+        },
+        {
+            "timeSlot": "08:30-09:00",
+            "list": []
+        },
+        {
+            "timeSlot": "09:00-09:30",
+            "list": []
+        },
+        {
+            "timeSlot": "09:30-10:00",
+            "list": []
+        },
+        {
+            "timeSlot": "10:00-10:30",
+            "list": []
+        },
+        {
+            "timeSlot": "10:30-11:00",
+            "list": []
+        },
+        {
+            "timeSlot": "11:00-11:30",
+            "list": []
+        },
+        {
+            "timeSlot": "13:00-13:30",
+            "list": []
+        },
+        {
+            "timeSlot": "13:30-14:00",
+            "list": []
+        },
+        {
+            "timeSlot": "14:00-14:30",
+            "list": []
+        },
+        {
+            "timeSlot": "14:30-15:00",
+            "list": []
+        },
+        {
+            "timeSlot": "15:00-15:30",
+            "list": []
+        },
+        {
+            "timeSlot": "15:30-16:00",
+            "list": []
+        },
+        {
+            "timeSlot": "16:00-16:30",
+            "list": []
+        }
+    ]
+}

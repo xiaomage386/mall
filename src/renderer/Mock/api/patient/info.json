@@ -1,0 +1,19 @@
+{
+    "message": "操作成功",
+    "code": "0",
+    "object": {
+        "patientId|+1": 1,
+        "hisOrderId|1000-10000": 1,
+        "birthName": "@cname()",
+        "birthday": "Jan 1, 2010 3:00:33 PM",
+        "height|150-180": 1,
+        "weight|50-60": 1,
+        "phone": "13655554444",
+        "gender|1": [
+            "male",
+            "female"
+        ],
+        "ssn": "@id()",
+        "area": "@city(true)"
+    }
+}

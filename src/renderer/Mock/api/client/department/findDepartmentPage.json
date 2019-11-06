@@ -1,0 +1,15 @@
+{
+    "total": "100",
+    "page_start": "1",
+    "page_n": "1",
+    "message": "操作成功",
+    "code": "1",
+    "object": {
+        "departments|5": [{
+            "departmentName": "@ctitle()科室",
+            "isDefault|1": false,
+            "departmentId|+1": 1,
+            "departmentCode": "1324548418"
+        }]
+    }
+}

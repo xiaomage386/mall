@@ -1,0 +1,13 @@
+{
+    "total": "100",
+    "page_start": "1",
+    "page_n": "1",
+    "message": "操作成功",
+    "code": "1",
+    "object": {
+        "isDefault": true,
+        "reportTitlePrefix": "格创肺功能医院",
+        "hospitalName": "格创肺功能医院",
+        "hospitalCode": "huxijia"
+      }
+}

@@ -1,0 +1,44 @@
+{
+    "code": "1",
+    "message": "操作成功",
+    "object": {
+        "operators|5": [
+            {
+                "operatorName": "@cname()操作者",
+                "operatorId|+1": [1,2,3,4,5],
+                "isDefault": "true"
+            }
+        ],
+        "doctors|5": [
+            {
+                "doctorName": "@cname()医生",
+                "doctorId|+1": [1,2,3,4,5]
+            }
+        ],
+        "patientCountries|3": [
+            {
+                "pcModel|+1": ["ERS","knudson","USA"],
+                "pcId|+1": [1,2,3],
+                "isDefault": "true"
+            }
+        ],
+        "types": [
+            {
+                "code": "ADULT",
+                "name": "成人",
+                "isDefault": "true"
+              },
+              {
+                "code": "CHILD",
+                "name": "儿童",
+                "isDefault": "false"
+              }
+        ],
+        "nations|10": [
+            {
+                "nationId|+1": [1,2,3,4,5,6,7,8,9,10],
+                "nationName|+1": ["白种人","东方人","中国人","日本人","波利尼亚人","北印度人","南印度人", "巴基斯坦人", "非洲血统人", "未定义"]
+            }
+        ]
+    }
+}

@@ -1,0 +1,79 @@
+{
+    "code": "1",
+    "message": "操作成功",
+    "object": {
+        "deviceType": "",
+        "doctorDiagnosis": null,
+        "patientName": "陈银基",
+        "gradeId": 70,
+        "notes": null,
+        "patientBirthday": "1997-08-01 00:00:00",
+        "buildTime": "2019-05-15 09:28:08",
+        "patientGender": "男",
+        "doctorExplain": "疑似 重度限制型肺通气功能障碍。",
+        "pcModel": "ERS93",
+        "patientWeight": "45",
+        "fvc": [{
+            "fvcGraps": [{
+                    "pef": 0.13,
+                    "fvc": 0.0825,
+                    "fvcGrapId": 158996,
+                    "type": "BLOW",
+                    "order": 951
+                },
+                {
+                    "pef": 0.18,
+                    "fvc": 0.0843,
+                    "fvcGrapId": 158997,
+                    "type": "BLOW",
+                    "order": 952
+                },
+                {
+                    "pef": 0.27,
+                    "fvc": 0.087,
+                    "fvcGrapId": 158998,
+                    "type": "BLOW",
+                    "order": 953
+                }
+            ],
+            "fvcActualId": 166,
+            "uploadTime": "2019-05-15 09:28:08",
+            "testUniqKey": "YZQhb7rNWcmjEy2AamFMktRTiJFpyStr",
+            "VTGraps": [{
+                    "fvc": 0.0008,
+                    "order": 0
+                },
+                {
+                    "fvc": 0.0022,
+                    "order": 1
+                },
+                {
+                    "fvc": 0.004,
+                    "order": 2
+                }
+            ],
+            "FEV1": 1.48
+        }],
+        "deviceImei": "",
+        "patientHeight": "157",
+        "reportTitlePrefix": "格创肺功能医院",
+        "ela": 26,
+        "gradeUniqKey": "os3fyCtKgbuga4x2mdiC",
+        "table|16": [{
+            "name": "FVC",
+            "Pred": 4.16,
+            "A1": 35.82,
+            "A1/Pd": 1.49,
+            "P1": 1.49,
+            "A2/Pd": 1.49,
+            "chg%1": 1.49,
+            "P2": 1.49,
+            "A3/Pd": 1.49,
+            "chg%2": 1.49,
+            "P3": 1.49,
+            "A4/Pd": 1.49,
+            "chg%3": 1.49,
+            "unit": "[L]"
+        }]
+    }
+}

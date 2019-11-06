@@ -1,0 +1,15 @@
+{
+    "total": "100",
+    "page_start": "1",
+    "page_n": "1",
+    "message": "操作成功",
+    "code": "1",
+    "object|": {
+        "doctors|5": [{
+            "doctorId|+1": 1,
+            "doctorName": "@cname()医生",
+            "doctorCode": "@cname()",
+            "mobile": "13655554444"
+        }]
+    }
+}

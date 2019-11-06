@@ -1,0 +1,54 @@
+{
+    "code": "1",
+    "message": "操作成功",
+    "object": {
+        "total": 2,
+        "pageNumber": 1,
+        "drugs": [
+            {
+                "standard": [
+                    "0.1mg/吸*200吸",
+                    "0.1mg/吸*100吸"
+                ],
+                "usageUnit": [
+                    "1喷",
+                    "2喷"
+                ],
+                "drugCode": "fbzy37bvvVRjj9kLCvIg",
+                "chemicalName": "布地奈德吸入粉剂",
+                "drugName": "普米克都保",
+                "drugId": 3,
+                "drugType": {
+                    "drugTypeName": "吸入药物",
+                    "drugTypeId": 1,
+                    "drugTypeCode": "5lhnArtdMpdrjdgw5UTX"
+                },
+                "order": 2
+            },
+            {
+                "standard": [
+                    "1喷",
+                    "2喷"
+                ],
+                "usageUnit": [
+                    "1喷",
+                    "2喷",
+                    "200ug",
+                    "3喷"
+                ],
+                "drugCode": "ventolin",
+                "chemicalName": null,
+                "drugName": "万托林",
+                "drugId": 1,
+                "drugType": {
+                    "drugTypeName": "吸入药物",
+                    "drugTypeId": 1,
+                    "drugTypeCode": "5lhnArtdMpdrjdgw5UTX"
+                },
+                "order": 1
+            }
+        ],
+        "totalPage": 1,
+        "pageSize": 10
+    }
+}

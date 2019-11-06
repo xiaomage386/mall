@@ -1,0 +1,15 @@
+{
+    "code": "1",
+    "message": "操作成功",
+    "object": {
+        "total": 3,
+        "pageNumber": 1,
+        "totalPage": 1,
+        "pageSize": 10,
+        "patientCountrys|5-10": [{
+            "pcCode": "@name()",
+            "pcName": "@name()模式",
+            "pcId|+1": 1
+        }]
+    }
+}

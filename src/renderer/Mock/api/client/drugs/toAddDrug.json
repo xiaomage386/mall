@@ -1,0 +1,13 @@
+{
+    "code": "1",
+    "message": "操作成功",
+    "object": {
+        "drugTypes|10": [
+            {
+                "code": "5lhnArtdMpdrjdgw5UTX",
+                "name": "吸入药物",
+                "drugTypeId|+1": 1
+            }
+        ]
+    }
+}

@@ -1,0 +1,7 @@
+{
+	"code": "1",
+    "errstr": "",
+    "object": {
+        "downloadUrl": "http://test.huxijia.cn/axserver2/api/client/fvcReport/download.jhtml?url=test.huxijia.cn/axserver2/api/client/fvcReport/toFVCReport/22.jhtml&patientId=19&date=1556596613473&fileName=fvcReport"
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "code": "1",
+    "message": "操作成功",
+    "object": {
+        "standard": [
+            "0.1mg/吸*200吸",
+            "0.1mg/吸*100吸"
+        ],
+        "usageUnit": [
+            "1喷",
+            "2喷"
+        ],
+        "drugCode": "fbzy37bvvVRjj9kLCvIg",
+        "chemicalName": "布地奈德吸入粉剂",
+        "drugName": "普米克都保",
+        "drugId": 3,
+        "drugTypeId": 1,
+        "order": 2
+    }
+}

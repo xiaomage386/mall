@@ -1,0 +1,14 @@
+{
+    "total": "100",
+    "page_start": "1",
+    "page_n": "1",
+    "message": "操作成功",
+    "code": "1",
+    "object": {
+        "operators|5": [{
+            "operatorCode": "1324548418",
+            "operatorId|+1": 1,
+            "operatorName": "@cname()操作者"
+        }]
+    }
+}

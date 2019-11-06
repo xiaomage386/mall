@@ -1,0 +1,24 @@
+{
+    "code": "1",
+    "message": "操作成功",
+    "object": {
+        "total": 2,
+        "pageNumber": 1,
+        "totalPage": 1,
+        "pageSize": 40,
+        "reportTemplates": [
+            {
+                "isDefault": true,
+                "templateName": "常规通气报告",
+                "templateCode": "SpiroALL",
+                "templateId": 2
+            },
+            {
+                "isDefault": false,
+                "templateName": "舒张试验报告",
+                "templateCode": "DiastolicReport",
+                "templateId": 3
+            }
+        ]
+    }
+}

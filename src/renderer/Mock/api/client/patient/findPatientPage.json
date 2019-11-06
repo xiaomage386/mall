@@ -1,0 +1,43 @@
+{
+
+    "message": "操作成功",
+    "code": "1",
+    "object": {
+        "total": "100",
+        "page_start": "1",
+        "page_n": "1",
+        "patients|10": [
+            {
+                "sysId|+1": 1,
+                "name": "@cname()",
+                "clinicNum|10000-100000": 1,
+                "testNum|10000-100000": 1,
+                "sickbedNum|10000-100000": 1,
+                "birthday": "2000-03-06",
+                "gender|1": ["男", "女"],
+                "age|10-30": 1,
+                "height|150-180": 1,
+                "weight|50-60": 1,
+                "benchmarkWeight": "60",
+                "reportNum|0-9": 1,
+                "surfaceArea": "60",
+                "area": "广东省广州市",
+                "mobile": "13655554444",
+                "remark": "备注",
+                "job|1": ["教师","医生","护士"],
+                "patientCountry": 2,
+                "operator": 2,
+                "department": 2,
+                "doctor": 2,
+                "currentTime": "2018-3-26 12:25",
+	            "createTime": "2018-3-26 22:25",
+                "nation|1": ["白种人","东方人","中国人","日本人","波利尼亚人","北印度人","南印度人", "巴基斯坦人", "非洲血统人", "未定义"],
+                "clinicalImpression": "@ctitle(4,10)症状",
+                "smokingHistory": "@ctitle(4,10)，10年吸烟",
+                "medicalHistory": "@ctitle(4,10)感冒",
+                "patientId": "88"
+            }
+        ]
+    }
+    
+}

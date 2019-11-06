@@ -1,0 +1,76 @@
+{
+    "code": "1",
+    "message": "操作成功",
+    "object": {
+        "fromtScalingActual": {
+            "flowInAvg": 9.94,
+            "gainExAvg": 4.39,
+            "altitude": 100,
+            "buildTime": "2019-04-23 09:28:08",
+            "capacityExAvg": 5.48,
+            "capacityInAvg": 5.24,
+            "temperature": 27,
+            "humidity": 50,
+            "flowExAvg": 5.24,
+            "gainInAvg": 5.24,
+            "pressure": 750
+        },
+        "acceptable|1": true,
+        "thisScalingActual": {
+            "flowInAvg": 3.11,
+            "gainExAvg": 1.02,
+            "altitude": 100,
+            "buildTime": "2019-05-14 09:28:08",
+            "capacityExAvg": 3.01,
+            "capacityInAvgDiff": -42.37,
+            "capacityInAvg": 3.02,
+            "pressure": 750,
+            "flowInAvgDiff": -68.71,
+            "capacityExAvgDiff": -45.07,
+            "gainInAvgDiff": -81.49,
+            "temperature": 27,
+            "flowExAvgDiff": -39.31,
+            "humidity": 50,
+            "gainExAvgDiff": -76.77,
+            "flowExAvg": 3.18,
+            "gainInAvg": 0.97
+        },
+        "capacityScalingNumber|3-6": 3,
+        "CapacityScalingCode|1": ["THREEL", "TWOL"],
+        "scalingType|1": ["CAPACITYSCALING", "CURRENTVELOCITYSCALING"],
+        "acceptableFeedback": [
+            "误差在+/- 10 %范围内", "误差在+/- 15 %范围内"
+        ],
+        "scalingGroupId": 2,
+        "scalingActual": [{
+            "scalingGrap": [{
+                    "pef": 0,
+                    "fvc": 0.5,
+                    "type": "BLOW",
+                    "scalingGrapId": 2677,
+                    "order": 0
+                },
+                {
+                    "pef": 1.5,
+                    "fvc": 2,
+                    "type": "BLOW",
+                    "scalingGrapId": 2678,
+                    "order": 1
+                },
+                {
+                    "pef": 3,
+                    "fvc": 2.5,
+                    "type": "BLOW",
+                    "scalingGrapId": 2679,
+                    "order": 2
+                }
+            ],
+            "flowEx": 3.18,
+            "flowIn": 3.11,
+            "gainEx": 1.02,
+            "capacityIn": 2,
+            "capacityEx": 3,
+            "gainIn": 0.97
+        }]
+    }
+}

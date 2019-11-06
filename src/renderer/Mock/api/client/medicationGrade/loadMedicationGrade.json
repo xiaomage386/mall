@@ -1,0 +1,39 @@
+{
+    "code": "1",
+    "message": "操作成功",
+    "object": {
+        "newGradeMode": [
+            {
+                "gradeName": "新用药前",
+                "gradeCode": "NEWBEFOREMEDICATION",
+                "ordinal": "2"
+            },
+            {
+                "gradeName": "新用药后",
+                "gradeCode": "NEWAFTERMEDICATION",
+                "ordinal": "3"
+            }
+        ],
+        "gradeRecord": [
+            {
+                "gradeName": "用药后",
+                "gradeId": "35",
+                "buildTime": "2019-04-26 10:14:14",
+                "gradeCode": "AFTERMEDICATION",
+                "gradeUniqKey": "FIpCHzbOSLrPWFlwVdOM"
+            }
+        ],
+        "gradeMode": [
+            {
+                "gradeName": "用药前",
+                "gradeCode": "BEFOREMEDICATION",
+                "ordinal": "0"
+            },
+            {
+                "gradeName": "用药后",
+                "gradeCode": "AFTERMEDICATION",
+                "ordinal": "1"
+            }
+        ]
+    }
+}

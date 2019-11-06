@@ -1,0 +1,80 @@
+{
+    "code": "1",
+    "message": "操作成功",
+    "object": {
+        "class": "com.huxijia.ax.dto.FVCReportDto",
+        "fvc": [
+            {
+                "fev1|1-10": 1,
+                "fvc|1-10": 1,
+                "pef|1-10": 1,
+                "fef25|1-10": 1,
+                "fef50|1-10": 1,
+                "fef75|1-10": 1,
+                "fef2575|1-10": 1,
+                "fvcGraps": [
+                    {
+                        "class": "com.huxijia.ax.dto.FVCGrapDto",
+                        "fvc": 4.1645,
+                        "mode": "BLOW",
+                        "order": 1,
+                        "pef": 0
+                    },
+                    {
+                        "class": "com.huxijia.ax.dto.FVCGrapDto",
+                        "fvc": 4.1645,
+                        "mode": "BLOW",
+                        "order": 2,
+                        "pef": 0
+                    },
+                    {
+                        "class": "com.huxijia.ax.dto.FVCGrapDto",
+                        "fvc": 4.1645,
+                        "mode": "INHALE",
+                        "order": 3,
+                        "pef": 0
+                    }
+                ]
+            }
+        ],
+        "fvcReportId": 1,
+        "buildTime": "2018-03-26 16:57:21",
+        "table": {
+            "fvc": {
+                "pre|1-10": 1,
+                "best|1-10": 1,
+                "bestPre|1-10": 1
+            },
+            "fev1": {
+                "pre|1-10": 1,
+                "best|1-10": 1,
+                "bestPre|1-10": 1
+            },
+            "pef": {
+                "pre|1-10": 1,
+                "best|1-10": 1,
+                "bestPre|1-10": 1
+            },
+            "fef25": {
+                "pre|1-10": 1,
+                "best|1-10": 1,
+                "bestPre|1-10": 1
+            },
+            "fef50": {
+                "pre|1-10": 1,
+                "best|1-10": 1,
+                "bestPre|1-10": 1
+            },
+            "fef75": {
+                "pre|1-10": 1,
+                "best|1-10": 1,
+                "bestPre|1-10": 1
+            },
+            "fef2575": {
+                "pre|1-10": 1,
+                "best|1-10": 1,
+                "bestPre|1-10": 1
+            }
+        }
+    }
+}

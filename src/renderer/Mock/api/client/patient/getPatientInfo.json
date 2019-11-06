@@ -1,0 +1,33 @@
+{
+    "message": "操作成功",
+    "code": "1",
+    "object": {
+        "patientId|+1": 1,
+        "sysId|1000-10000": 1,
+        "name": "@cname()",
+        "clinicNum|10000-100000": 1,
+        "testNum|10000-100000": 1,
+        "sickbedNum|10000-100000": 1,
+        "birthday": "1996-03-06",
+        "age|10-30": 1,
+        "height|150-180": 1,
+        "weight|50-60": 1,
+        "mobile": "13655554444",
+        "responsibleDoctorId": 2,
+        "type|1": [
+            "ADULT",
+            "CHILD"
+        ],
+        "gender|1": [
+            "male",
+            "female"
+        ],
+        "doctorId": 2,
+        "departmentId": 2,
+        "operatorId": 2,
+        "patientCountryId": 2,
+        "nationId": 2,
+        "IDcard": "@id()",
+        "address": "@city(true)"
+    }
+}
