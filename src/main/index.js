@@ -31,10 +31,6 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
-  mainWindow.on('close', (event) => {
-      mainWindow.hide()
-      event.preventDefault();
-  });
 }
 
 app.on('ready', createWindow)

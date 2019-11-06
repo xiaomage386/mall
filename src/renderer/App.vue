@@ -26,7 +26,7 @@ const SERVICE_TYPE = APP_CONFIG['NAME'] + '_SERVICE_TYPE';
 let isRemote = localStorage.getObject(SERVICE_TYPE) == 1 ? localStorage.getObject(SERVICE_TYPE) : 2
 let IntervalWesoket;
 export default {
-    name: 'creaker-desktop',
+    name: 'creaker-reserve',
     created() {
         let isInAuth = this.$route.name == 'Auth';
         // 登录过期广播

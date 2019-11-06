@@ -9,7 +9,7 @@ const CONFIG = {};
 const {name, version} = require('@/../../package.json')
 
 // 项目参数
-CONFIG['NAME'] = name || 'HuxijiaElectron';
+CONFIG['NAME'] = name || 'creakerReserve';
 CONFIG['Version'] = version || '1.0.0';
 
 // 服务器配置名称
@@ -25,7 +25,8 @@ CONFIG['LOCAL_ADDRESS'] = 'http://localhost:10241/';
 // 正式环境
 // CONFIG['REMOTE_ADDRESS'] = 'https://www.huxijia.cn/';
 // 测试环境
-CONFIG['REMOTE_ADDRESS'] = 'http://www.creaker.net/';
+// CONFIG['REMOTE_ADDRESS'] = 'http://www.creaker.net/';
+CONFIG['REMOTE_ADDRESS'] = '127.0.0.1/';
 
 // CONFIG['HOST'] = localStorage.getObject(SERVICE_TYPE) == 1 ? CONFIG['LOCAL_ADDRESS'] : CONFIG['LOCAL_ADDRESS'];
 CONFIG['HOST'] = CONFIG['REMOTE_ADDRESS'];

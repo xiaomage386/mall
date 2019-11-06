@@ -285,6 +285,9 @@ export default {
     methods: {
         // 获取患者数据
         getHisInfoFun(data) {
+            if (!Utils.size(this.hisId)) {
+                return
+            }
             let _data = {
                 hisId: data
             }
