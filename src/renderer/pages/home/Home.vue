@@ -7,7 +7,7 @@
             <el-row>
                 <span class="label-item">检测项目</span>
                 <el-col :span="10">
-                    <el-select v-model="typeSelect" placeholder="请选择检测项目">
+                    <el-select v-model="typeSelect" placeholder="请选择检测项目" @change="reservationInfoFun">
                         <el-option label="常规肺功能" value="0"></el-option>
                         <el-option label="激发试验" value="1"></el-option>
                     </el-select>
@@ -31,7 +31,8 @@
                         <span v-text="index == '0' ? '上午' : '下午'"></span>
                         <table>
                             <template v-for='value in item'>
-                                <tr><th :class="{blue:i===value.index}" @click="timeSlotFun(value)">{{value.timeSlot}}</th>
+                                <tr>
+                                    <th :class="{blue:i===value.index}" @click="timeSlotFun(value)">{{value.timeSlot}}</th>
                                     <template v-for='tds in value.list'>
                                         <td>{{tds.name}}</td>
                                     </template>
@@ -142,7 +143,7 @@
                         </el-form-item>
                         <el-form-item label="检测预约">
                             <div v-if="isReservation">
-                                <div class="type-item" v-for="item in reservationApplys" >
+                                <div class="type-item" v-for="(item, index) in reservationApplys" >
                                     <b>{{item.checkProject == 0 ? '常规肺功能' : '舒张实验'}}</b>
                                     <p>{{item.applyDate}}</p>
                                     <i @click="delReservationFun" class="icon-btn icon-close-white"></i>
@@ -176,7 +177,6 @@ const os = require('os')
 const currentWindow = remote.getCurrentWindow();
 const WIN_CONFIG = REMOTE_CONFIG['BrowserWindow'];
 var keycode = '';
-var code = '';
 var lastTime = null;
 var nextTime = null;
 var lastCode = null;
@@ -306,6 +306,13 @@ export default {
         },
         // 预约时间弹窗确定选择
         dialogFun() {
+            let isFull = 0
+            let list = this.array[this.i].list
+            for (let i = 0; i < list.length; i++) {
+                if (Utils.size(list[i]) > 0) {
+                    isFull = isFull + 1
+                }
+            }
             let time = this.date + ' ' + this.reservationDate;
             if (!Utils.size(this.reservationDate)) {
                 Popup.showToast.Warning('请选择预约项目')
@@ -313,6 +320,11 @@ export default {
             }
             if (!Utils.size(this.typeSelect)) {
                 Popup.showToast.Warning('请选择检测项目')
+                return
+            }
+            if (isFull == 3) {
+                Popup.showToast.Warning('此预约已满，请选择其他时间段')
+                return
             }
             this.reservationApplys.push({'checkProject': this.typeSelect, 'applyDate': time})
             this.dialogFormVisible.isVisble = false
@@ -320,8 +332,11 @@ export default {
         },
          // 查询预约时间段
         reservationInfoFun() {
+            if (!Utils.size(this.date)) {
+                return
+            }
             let _data = {
-                applyDate: this.date || '',
+                applyDate: this.date,
                 checkProject: this.typeSelect || ''
             }
             patientService.reservationInfo(_data).then(data => {
@@ -466,7 +481,6 @@ export default {
                 Popup.showToast.Warning('请选择预约项目')
                 return
             }
-            console.log(this.reservationApplys)
             this.ruleForm.gender = this.gender == '男' ? '0' : '1'
             let _data = this.ruleForm
             _data.gender = this.gender == '男' ? '0' : '1'
@@ -574,16 +588,17 @@ export default {
             background: #fff;
             th{
                 font-weight: 400;
-                text-align: left;
-                width: 40%;
+                
+                width: 90px;
                 cursor: pointer;
             }
             th, td{
-                padding: 6px 6px;
+                padding: 6px 0;
                 border: 1px solid #ccc;
             }
             td{
-                width: 59px;
+                text-align: center;
+                width: 65px;
             }
         }
     }
