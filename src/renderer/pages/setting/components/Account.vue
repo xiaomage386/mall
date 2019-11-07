@@ -111,9 +111,10 @@ export default {
     methods: {
          outLogin() {
              if (this.outLoginStatus) {
-                commonService.Logout().then(data => {
+                commonService.Authorize('注销成功！请重新登录！');
+                /* commonService.Logout().then(data => {
                     commonService.Authorize('注销成功！请重新登录！');
-                })
+                }) */
                 this.outLoginStatus = false
              }
         },

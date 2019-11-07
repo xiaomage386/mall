@@ -21,15 +21,14 @@ CONFIG['DEBUG'] = !CONFIG['DEPLOY'];
 
 // SERVER配置
 // SERVICE_TYPE 1：本地服务器 2：远程服务器
-CONFIG['LOCAL_ADDRESS'] = 'http://localhost:10241/';
+// CONFIG['LOCAL_ADDRESS'] = 'http://localhost:10241/';
 // 正式环境
 // CONFIG['REMOTE_ADDRESS'] = 'https://www.huxijia.cn/';
 // 测试环境
-// CONFIG['REMOTE_ADDRESS'] = 'http://www.creaker.net/';
-CONFIG['REMOTE_ADDRESS'] = '127.0.0.1/';
+CONFIG['LOCAL_ADDRESS'] = 'http://127.0.0.1/';
+CONFIG['REMOTE_ADDRESS'] = 'http://www.creaker.net/';
 
-// CONFIG['HOST'] = localStorage.getObject(SERVICE_TYPE) == 1 ? CONFIG['LOCAL_ADDRESS'] : CONFIG['LOCAL_ADDRESS'];
-CONFIG['HOST'] = CONFIG['REMOTE_ADDRESS'];
+CONFIG['HOST'] = localStorage.getObject(SERVICE_TYPE) == 1 ? CONFIG['LOCAL_ADDRESS'] : CONFIG['REMOTE_ADDRESS'];
 CONFIG['DOMAIN'] = 'creaker.net';
 CONFIG['APP_RUNTIME'] = 'webapp'
 CONFIG['RUNTIME'] = 'creaker';

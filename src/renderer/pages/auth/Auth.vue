@@ -1,5 +1,23 @@
 <template>
     <div class="auth">
+        <el-dialog :visible.sync="dialogFormVisible"
+                   width="400px"
+                   title="服务配置">
+            <el-form ref="sevriceForm"
+                     :model="sevriceForm"
+                     size="small"
+                     :validate-on-rule-change="false">
+                <el-row>
+                    <el-radio v-model="radio" :label='1'>本地服务器</el-radio>
+                    <el-radio v-model="radio" :label='2'>远程服务器</el-radio>
+                </el-row>
+                <div class="btn-list text-right">
+                    <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
+                    <el-button type="primary" size="mini"
+                               @click="sevriceSubmitForm()">确定</el-button>
+                </div>
+            </el-form>
+        </el-dialog>
         <div class="auth-bg"></div>
         <div class="inside padding">
             <div class="content">
@@ -10,6 +28,11 @@
                     <i slot="suffix"
                        class="icon-btn icon-close-white winNoDrag"
                        @click="Close()"></i>
+                    <div class="service"
+                         @click="configService">
+                        <i class="icon icon-setting"></i>
+                        服务配置
+                    </div>
                 </div>
                 <div class="window-bar winDrag"></div>
                 <div class="title">肺功能预约补录系统</div>
@@ -130,6 +153,7 @@ export default {
                         commonService.Warning(data['code'], data['msg'])
                         return data
                     }
+                    this.$router.push('/mainWindow')
                     currentWindow.setResizable(WIN_CONFIG['useContentSize'])
                     currentWindow.setMinimumSize(WIN_CONFIG['minWidth'], WIN_CONFIG['minHeight'])
                     currentWindow.setSize(WIN_CONFIG['width'], WIN_CONFIG['height'])
@@ -137,7 +161,6 @@ export default {
                     localStorage.set(COOKIE_CLAUSE, true);
                     localStorage.set(LOGIN_NAME, _data.username)
                     Popup.showToast.Success('登录成功！')
-                    this.$router.push('/mainWindow')
                     // 同步数据到本地服务
                     /* if (this.radio == 2) {
                         commonService.LocalLogin(_data)
@@ -214,7 +237,7 @@ export default {
 .auth .content .set-wrapper{margin-top: 15px;font-size: 12px;}
 .auth .content .el-form-item__error{padding-top:1px}
 .auth .content .settings a{cursor: pointer;font-size: 12px;color: #d7d7d7;height: 12px;line-height: 12px;display: inline-block}
-.auth .content .decorate{position: absolute;right: 0;top:0;color: #fff;width: 272px;height: 170px;text-align: center;}
+.auth .content .decorate{position: absolute;right: 0;top:0;color: #fff;width: 272px;height: 255px;text-align: center;}
 .auth .content .decorate .text{font-size: 18px;font-weight: bold;margin-bottom: 15px;}
 .auth .content .decorate .desc{font-size: 14px;}
 .auth .content .decorate .icon-btn{position: absolute;right: 5px;top: 5px;cursor: pointer;}
@@ -223,7 +246,7 @@ export default {
 .auth .content .window-bar{position: absolute;left: 0;right: 50px;top: 0;height: 40px;}
 .auth .content .el-form-item{margin-bottom: 15px;}
 .auth .content .el-button {padding: 0;width: 100%;border-radius: 2px;height: 40px;line-height: 40px;font-size: 14px;background-color: #fff;color: #333; border-color: #fff; }
-.auth .service {cursor: pointer;position: absolute;bottom: 5px;left: 5px;font-size: 14px;display: flex;flex-direction: row;line-height: 30px;}
+.auth .service {cursor: pointer;position: absolute;bottom: 5px;right: 15px;font-size: 14px;display: flex;flex-direction: row;line-height: 30px;}
 .auth .el-dialog {margin: 40px auto 0 auto!important;}
 .auth .el-dialog .el-dialog__body {padding: 20px;}
 .auth .el-dialog .btn-list {margin-top: 15px;}

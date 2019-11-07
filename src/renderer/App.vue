@@ -37,35 +37,15 @@ export default {
         });
         if (commonService.updateToken()) {
             commonService.checkLogin();
+            console.log('checkLogin')
         } else if (!isInAuth) {
+            console.log('isInAuth')
             commonService.Authorize();
         }
     },
     computed: {
         isLogin() {
             return this.$store.state.User.isLogin
-        }
-    },
-    watch: {
-        isLogin(newVal) {
-            if (isRemote == 1) {
-                if (newVal || newVal == '') {
-                    this.$nextTick(() => {
-                        _user = localStorage.getObject(COOKIE_UCENTER)
-                        if (Utils.size(_user) > 0) {
-                            wsUrl = HTTP_CLIENT.WS_SERVER + _user.doctorId
-                            this.$store.dispatch('BACKUP_CHANGE', '');
-                            IntervalWesoket = setInterval(function () {
-                                if (ws != null){
-                                    ws.send('success')
-                                }
-                            }, 10000);
-                        }
-                    })
-                } else {
-                    clearInterval(IntervalWesoket);
-                }
-            }
         }
     }
 }
