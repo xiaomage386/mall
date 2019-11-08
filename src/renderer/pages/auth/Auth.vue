@@ -153,7 +153,8 @@ export default {
                         commonService.Warning(data['code'], data['msg'])
                         return data
                     }
-                    this.$router.push('/mainWindow')
+                    // this.$router.push('/mainWindow')
+                    this.$router.push({name: 'Home'})
                     currentWindow.setResizable(WIN_CONFIG['useContentSize'])
                     currentWindow.setMinimumSize(WIN_CONFIG['minWidth'], WIN_CONFIG['minHeight'])
                     currentWindow.setSize(WIN_CONFIG['width'], WIN_CONFIG['height'])

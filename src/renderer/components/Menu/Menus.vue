@@ -92,12 +92,12 @@ export default {
 </script>
 
 <style>
-.menus {padding: 15px 0 10px 0;padding-top: 32px;}
+.menus {position: fixed; z-index: 11; padding: 0px 0 10px 0;width: 65px;background-color: #3394f5;height: 100%;}
 .menus .img{text-align: center;margin: 0 auto 15px auto;width: 34px;height: 34px;border-radius: 50%;cursor: pointer;}
 .menus .el-menu {height: 100%;background-color: #3394f5!important;overflow: hidden;border: 0;}
 .menus .el-menu .el-menu-item{background-color: #3394f5!important;color: #fff!important;}
 .menus .el-menu .el-menu-item i{color: #fff!important;}
 .menus .el-menu .el-menu-item.is-active{background-color: #1984f7!important;}
-.menus .set-menus {position: absolute;bottom: 20px;left: 0;right:0;height: auto;}
+.menus .set-menus {position: fixed;bottom: 20px;left: 0;right:0;height: auto;width: 65px;}
 .menus .navMenu > label:last-child{display: none}
 </style>

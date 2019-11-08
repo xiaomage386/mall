@@ -9,8 +9,8 @@ export default {
                 'alias': '首页',
                 'state': 'ENABLE',
                 'sort': 0,
-                'route': '/mainWindow',
-                'value': '/mainWindow',
+                'route': '/Home',
+                'value': '/Home',
                 'type': 'NONE',
                 'discription': '用于系统管理的菜单',
                 'createUserId': 1
@@ -58,8 +58,8 @@ export default {
             'alias': '分类',
             'state': 'ENABLE',
             'sort': 1,
-            'route': '/mainWindow/setting',
-            'value': '/mainWindow/setting',
+            'route': '/setting',
+            'value': '/setting',
             'type': 'NONE',
             'discription': '用于用户管理的菜单',
             'createUserId': 1

@@ -1,9 +1,9 @@
 <template>
     <div class="site-head clearfix">
         <div class="siteHeadBar winDrag">
+            <i class="icon-logo"></i>
             <div class="title" v-if="!!showTitle">
                 {{showTitle}}</div>
-                <!-- <i class="icon-logo"></i> -->
             <div class="window-btn winNoDrag">
                 <el-button icon="icon-btn icon-hide" @click="Minimize()"></el-button>
                 <!-- <el-button icon="icon-btn icon-screen" @click="Maximize()"></el-button> -->
@@ -57,8 +57,8 @@ export default {
 <style>
 .site-head {padding:0;height: 32px;z-index: 3;-webkit-user-select: none;-ms-user-select: none;user-select: none;}
 .site-head .siteHeadBar{position: fixed;top: 0;left: 0;right: 0;height: 32px;background-color: #e6eef7;background: #3394f5;}
-.site-head .title{float: left;line-height: 32px;font-size: 14px;color:#323232;padding-left: 10px;position:relative;color: #fff;}
-.site-head .icon-logo{background: url("../../assets/images/logo.png") no-repeat;width: 13px;height: 13px;margin-top:-7.5px;display: inline-block;position: absolute;top: 50%;left:10px}
+.site-head .title{line-height: 32px;font-size: 14px;color:#323232;padding-left: 10px;position:relative;color: #fff; float: left;}
+.site-head .icon-logo{background: url("../../assets/images/logo.png") no-repeat;background-size: cover; width: 20px;height: 20px; float:left;margin-top: 5px;margin-left: 10px;}
 .site-head .window-btn{float: right;}
 .site-head .window-btn > .el-button{padding: 9px 10px;border-width: 0;border-radius: 0;background: none;margin: auto;}
 .site-head .window-btn > .el-button:hover{background: rgba(0, 0, 0, 0.05);}

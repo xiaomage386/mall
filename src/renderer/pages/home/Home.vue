@@ -1,160 +1,167 @@
 <template>
     <div class="home">
-        <site-head title="肺功能预约补录系统"></site-head>
-        <el-dialog :visible.sync="dialogFormVisible.isVisble"
-            width="630px"
-            title="新增预约">
-            <el-row>
-                <span class="label-item">检测项目</span>
-                <el-col :span="10">
-                    <el-select v-model="typeSelect" placeholder="请选择检测项目" @change="reservationInfoFun">
-                        <el-option label="常规肺功能" value="0"></el-option>
-                        <el-option label="激发试验" value="1"></el-option>
-                    </el-select>
-                </el-col>
-            </el-row>
-            <el-row>
-                <span class="label-item">预约时间</span>
-                <el-col :span="10">
-                    <el-date-picker
-                        v-model="date"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        @change="reservationInfoFun"
-                        placeholder="选择日期">
-                    </el-date-picker>
-                </el-col>
-            </el-row>
-            <div class="time-box">
-                <el-row>
-                    <el-col :span="12" v-for="(item, index) in reservationArray" :key="index">
-                        <span v-text="index == '0' ? '上午' : '下午'"></span>
-                        <table>
-                            <tr v-for='(value, index) in item' :key="index">
-                                <th :class="{blue:i===value.index}" @click="timeSlotFun(value)">{{value.timeSlot}}</th>
-                                <td v-for='(tds, index) in value.list' :key="index">{{tds.name}}</td>
-                            </tr>
-                        </table>
-                    </el-col>
-                </el-row>
-            </div>
-            <div class="btn-list">
-                <el-button @click="dialogFormVisible.isVisble = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFun">确定</el-button>
-            </div>
-        </el-dialog>
-        <div class="content">
-            <el-form :model="ruleForm" label-position="right" :rules="rules" ref="ruleForm" label-width="100px">
-                <el-row>
-                    <el-col :span="8">
-                        <div class="title">填写基本信息{{hisId}} {{ruleForm.hisId}}</div>
-                        <el-form-item label="ID" prop="hisId">
-                            <el-input v-model="hisId" @blur="hisIdChange"></el-input>
-                        </el-form-item>
-                        <el-form-item label="住院号">
-                            <el-input v-model="ruleForm.clinicNum"></el-input>
-                        </el-form-item>
-                        <el-form-item label="姓名" prop="name">
-                            <el-input v-model="ruleForm.name"></el-input>
-                        </el-form-item>
-                        <el-form-item label="性别" prop="gender">
-                            <el-radio-group v-model="gender">
-                                <el-radio label="男">男</el-radio>
-                                <el-radio label="女">女</el-radio>
-                            </el-radio-group>
-                        </el-form-item>
-                        <el-form-item label="出生年月" prop="birthday">
+        <div class="noPrn">
+            <site-head showTitle="肺功能预约补录系统"></site-head>
+        </div>
+        <div v-show="!isPrint">
+            <Menus slot="menus"></Menus>
+            <div class="content">
+                <el-form :model="ruleForm" label-position="right" :rules="rules" ref="ruleForm" label-width="100px">
+                    <el-row>
+                        <el-col :span="8">
+                            <div class="title">填写基本信息</div>
+                            <el-form-item label="ID" prop="hisId">
+                                <el-input v-model="hisId" @blur="hisIdChange"></el-input>
+                            </el-form-item>
+                            <el-form-item label="住院号">
+                                <el-input v-model="ruleForm.clinicNum"></el-input>
+                            </el-form-item>
+                            <el-form-item label="姓名" prop="name">
+                                <el-input v-model="ruleForm.name"></el-input>
+                            </el-form-item>
+                            <el-form-item label="性别" prop="gender">
+                                <el-radio-group v-model="gender">
+                                    <el-radio label="男">男</el-radio>
+                                    <el-radio label="女">女</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="出生年月" prop="birthday">
+                                <el-date-picker
+                                    v-model="ruleForm.birthday"
+                                    type="date"
+                                    value-format="yyyy-MM-dd"
+                                    @change="timeChange"
+                                    placeholder="选择日期">
+                                </el-date-picker>
+                            </el-form-item>
+                            <el-form-item label="年龄">
+                                <el-col :span="12">
+                                    <el-input v-model="age"></el-input>
+                                </el-col>
+                                <el-col :span="12">岁</el-col>
+                            </el-form-item>
+                            <el-form-item label="体重" prop="weight">
+                                <el-col :span="12">
+                                    <el-input v-model="ruleForm.weight" @blur="setBMI"></el-input>
+                                </el-col>
+                                <el-col :span="12">kg</el-col>
+                            </el-form-item>
+                            <el-form-item label="身高" prop="height">
+                                <el-col :span="12">
+                                    <el-input v-model="ruleForm.height" @blur="setBMI"></el-input>
+                                </el-col>
+                                <el-col :span="12">cm</el-col>
+                            </el-form-item>
+                            <el-form-item label="BMI">
+                                <el-col :span="12">
+                                    <el-input v-model="BMI"></el-input>
+                                </el-col>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <div class="title">填写选填信息</div>
+                            <el-form-item label="籍贯">
+                                <el-input v-model="ruleForm.address"></el-input>
+                            </el-form-item>
+                            <el-form-item label="电话">
+                                <el-input v-model="ruleForm.mobile"></el-input>
+                            </el-form-item>
+                            <el-form-item label="职业">
+                                <el-input v-model="ruleForm.job"></el-input>
+                            </el-form-item>
+                            <el-form-item label="既往史">
+                                <el-input v-model="ruleForm.medicalHistory"></el-input>
+                            </el-form-item>
+                            <el-form-item label="吸烟史">
+                                <el-col :span="12">
+                                    <el-input v-model="ruleForm.smokingHistory"></el-input>
+                                </el-col>
+                                <el-col :span="12">年</el-col>
+                            </el-form-item>
+                            <el-form-item label="吸烟量">
+                                <el-col :span="12">
+                                    <el-input v-model="ruleForm.smokingVolume"></el-input>
+                                </el-col>
+                                <el-col :span="12">支/天</el-col>
+                            </el-form-item>
+                            <el-form-item label="已戒烟">
+                                <el-col :span="12">
+                                    <el-input v-model="ruleForm.quitSmoking"></el-input>
+                                </el-col>
+                                <el-col :span="12">年</el-col>
+                            </el-form-item>
+                            <el-form-item label="备注">
+                                <el-input type="textarea" v-model="ruleForm.remarks"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <div class="title">选择时间地点项目</div>
+                            <el-form-item label="检测地点">
+                                <el-input v-model="checkAddress"></el-input>
+                            </el-form-item>
+                            <el-form-item label="检测预约">
+                                <div v-if="isReservation">
+                                    <div class="type-item" v-for="(item, index) in reservationApplys" :key="index">
+                                        <b>{{item.checkProject == 0 ? '常规肺功能' : '舒张实验'}}</b>
+                                        <p>{{item.applyDate}}</p>
+                                        <i @click="delReservationFun" class="icon-btn icon-close-white"></i>
+                                    </div>
+                                </div>
+                                <el-button v-else @click="reservationFun" class="type-btn" type="primary">+新增预约</el-button>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-form>
+                <div class="foot-btn">
+                    <el-button type="danger" @click="resetForm('ruleForm')">清空</el-button>
+                    <el-button type="primary" @click="showPrint()">打印</el-button>
+                    <el-button type="primary" @click="reservationSaveFun('ruleForm')">提交</el-button>
+                </div>
+                <el-dialog :visible.sync="dialogFormVisible.isVisble"
+                    width="630px"
+                    title="新增预约">
+                    <el-row>
+                        <span class="label-item">检测项目</span>
+                        <el-col :span="10">
+                            <el-select v-model="typeSelect" placeholder="请选择检测项目" @change="reservationInfoFun">
+                                <el-option label="常规肺功能" value="0"></el-option>
+                                <el-option label="激发试验" value="1"></el-option>
+                            </el-select>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <span class="label-item">预约时间</span>
+                        <el-col :span="10">
                             <el-date-picker
-                                v-model="ruleForm.birthday"
+                                v-model="date"
                                 type="date"
                                 value-format="yyyy-MM-dd"
-                                @change="timeChange"
+                                @change="reservationInfoFun"
                                 placeholder="选择日期">
                             </el-date-picker>
-                        </el-form-item>
-                        <el-form-item label="年龄">
-                            <el-col :span="12">
-                                <el-input v-model="age"></el-input>
+                        </el-col>
+                    </el-row>
+                    <div class="time-box">
+                        <el-row>
+                            <el-col :span="12" v-for="(item, index) in reservationArray" :key="index">
+                                <span v-text="index == '0' ? '上午' : '下午'"></span>
+                                <table>
+                                    <tr v-for='(value, index) in item' :key="index">
+                                        <th :class="{blue:i===value.index}" @click="timeSlotFun(value)">{{value.timeSlot}}</th>
+                                        <td v-for='(tds, index) in value.list' :key="index">{{tds.name}}</td>
+                                    </tr>
+                                </table>
                             </el-col>
-                            <el-col :span="12">岁</el-col>
-                        </el-form-item>
-                        <el-form-item label="体重" prop="weight">
-                            <el-col :span="12">
-                                <el-input v-model="ruleForm.weight" @blur="setBMI"></el-input>
-                            </el-col>
-                            <el-col :span="12">kg</el-col>
-                        </el-form-item>
-                        <el-form-item label="身高" prop="height">
-                            <el-col :span="12">
-                                <el-input v-model="ruleForm.height" @blur="setBMI"></el-input>
-                            </el-col>
-                            <el-col :span="12">cm</el-col>
-                        </el-form-item>
-                        <el-form-item label="BMI">
-                            <el-col :span="12">
-                                <el-input v-model="BMI"></el-input>
-                            </el-col>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <div class="title">填写选填信息</div>
-                        <el-form-item label="籍贯">
-                            <el-input v-model="ruleForm.address"></el-input>
-                        </el-form-item>
-                        <el-form-item label="电话">
-                            <el-input v-model="ruleForm.mobile"></el-input>
-                        </el-form-item>
-                        <el-form-item label="职业">
-                            <el-input v-model="ruleForm.job"></el-input>
-                        </el-form-item>
-                        <el-form-item label="既往史">
-                            <el-input v-model="ruleForm.medicalHistory"></el-input>
-                        </el-form-item>
-                        <el-form-item label="吸烟史">
-                            <el-col :span="12">
-                                <el-input v-model="ruleForm.smokingHistory"></el-input>
-                            </el-col>
-                            <el-col :span="12">年</el-col>
-                        </el-form-item>
-                        <el-form-item label="吸烟量">
-                            <el-col :span="12">
-                                <el-input v-model="ruleForm.smokingVolume"></el-input>
-                            </el-col>
-                            <el-col :span="12">支/天</el-col>
-                        </el-form-item>
-                        <el-form-item label="已戒烟">
-                            <el-col :span="12">
-                                <el-input v-model="ruleForm.quitSmoking"></el-input>
-                            </el-col>
-                            <el-col :span="12">年</el-col>
-                        </el-form-item>
-                        <el-form-item label="备注">
-                            <el-input type="textarea" v-model="ruleForm.remarks"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <div class="title">选择时间地点项目</div>
-                        <el-form-item label="检测地点">
-                            <el-input v-model="checkAddress"></el-input>
-                        </el-form-item>
-                        <el-form-item label="检测预约">
-                            <div v-if="isReservation">
-                                <div class="type-item" v-for="(item, index) in reservationApplys" :key="index">
-                                    <b>{{item.checkProject == 0 ? '常规肺功能' : '舒张实验'}}</b>
-                                    <p>{{item.applyDate}}</p>
-                                    <i @click="delReservationFun" class="icon-btn icon-close-white"></i>
-                                </div>
-                            </div>
-                            <el-button v-else @click="reservationFun" class="type-btn" type="primary">+新增预约</el-button>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
-            <div class="foot-btn">
-                <el-button type="danger" @click="resetForm('ruleForm')">清空</el-button>
-                <el-button type="primary" @click="reservationSaveFun('ruleForm')">提交</el-button>
+                        </el-row>
+                    </div>
+                    <div class="btn-list">
+                        <el-button @click="dialogFormVisible.isVisble = false">取 消</el-button>
+                        <el-button type="primary" @click="dialogFun">确定</el-button>
+                    </div>
+                </el-dialog>
             </div>
         </div>
+        <printing ref="printRef" v-show="isPrint" :printID="printID" @close="closePrint"></printing>
     </div>
 </template>
 <script>
@@ -188,6 +195,7 @@ export default {
             dialogFormVisible: {
                 isVisble: false
             },
+            isPrint: false, // 报告页还是打印页
             hisId: '',
             gender: '', // 性别
             ruleForm: {
@@ -237,6 +245,7 @@ export default {
             reservationApplys: [], // 预约提交数据
             reservationDate: '', // 预约的日期
             isReservation: 0, // 新增预约按钮隐藏与显示
+            printID: 0, // 打印页面上传数据的id
             isUpdate: 0 // 0 数据未上传，1 数据已上传
         }
     },
@@ -301,6 +310,7 @@ export default {
                 this.gender = this.ruleForm.gender == '0' ? '男' : '女'
                 this.setBMI()
                 this.timeChange()
+                this.$refs['ruleForm'].resetFields()
             }, error => {
                 Popup.hideLoading()
                 patientService.NetWorkFail()
@@ -480,7 +490,7 @@ export default {
                 }
             });
             if (Utils.size(this.reservationApplys) == 0) {
-                Popup.showToast.Warning('请选择预约项目')
+                Popup.showToast.Warning('请选择预约项目和时间')
                 return
             }
             this.ruleForm.gender = this.gender == '男' ? '0' : '1'
@@ -494,12 +504,21 @@ export default {
                     return data
                 }
                 Popup.showToast.Success('提交成功！')
+                this.printID = data.object.applyId
+                this.isPrint = true
+                this.$refs.printRef.reservationApplyFun(this.printID);
                 this.isUpdate = 1
-                this.$router.push({name: 'Printing', query: { applyId: data.object.applyId }})
             }, error => {
                 Popup.hideLoading()
                 patientService.NetWorkFail()
             })
+        },
+        // 关闭打印页面
+        closePrint() {
+            this.isPrint = false
+        },
+        showPrint() {
+            this.isPrint = true
         }
     }
 };
@@ -509,6 +528,7 @@ export default {
     .content {
         position: relative;
         padding: 16px 0;
+        padding-left: 65px;
         .foot{
             position: fixed;left: 65px;right: 0;bottom: 20px;text-align: center;font-size: 14px;color: #666666;}
     }

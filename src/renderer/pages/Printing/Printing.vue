@@ -1,7 +1,7 @@
 <template>
     <div class="printing clearfix">
         <div class="noPrn">
-            <site-head showTitle="打印结果预览"></site-head>
+            <!-- <site-head showTitle="打印结果预览"></site-head> -->
             <div class="btn-list">
                 <el-button @click="openPrint">
                     <i class="icon-btn icon-printing"></i>
@@ -40,7 +40,7 @@
                     <tr><th>已戒烟：</th><td><span v-text="tableData.quitSmoking"></span> 年</td><th>既往史：</th><td></td><th>检查时间：</th><td v-text="tableData.applyDate"></td></tr>
                     <tr><th>检查项目：</th><td>{{tableData.checkProject == 0 ? '常规肺功能' : '激发试验'}}</td><th>籍贯：</th><td colspan="3" v-text="tableData.address"></td></tr>
                     <tr><th>备注：</th><td colspan="5"></td></tr>
-                    <tr><td colspan="6" style="height: 500px;"></td></tr>
+                    <tr><td colspan="6" style="height: 750px;"></td></tr>
                 </table>
             </div>
         </div>
@@ -51,7 +51,6 @@ import commonService from '@services/commonService'
 import patientService from '@services/patientService'
 import Popup from '@modules/Popup'
 import Utils from '@modules/Utils'
-// (function() {
     // if (!exports)
     var exports = window;
       var BARS = [212222, 222122, 222221, 121223, 121322, 131222, 122213, 122312, 132212, 221213, 221312, 231212, 112232, 122132, 122231, 113222, 123122, 123221, 223211, 221132, 221231, 213212, 223112, 312131, 311222, 321122, 321221, 312212, 322112, 322211, 212123, 212321, 232121, 111323, 131123, 131321, 112313, 132113, 132311, 211313, 231113, 231311, 112133, 112331, 132131, 113123, 113321, 133121, 313121, 211331, 231131, 213113, 213311, 213131, 311123, 311321, 331121, 312113, 312311, 332111, 314111, 221411, 431111, 111224, 111422, 121124, 121421, 141122, 141221, 112214, 112412, 122114, 122411, 142112, 142211, 241211, 221114, 413111, 241112, 134111, 111242, 121142, 121241, 114212, 124112, 124211, 411212, 421112, 421211, 212141, 214121, 412121, 111143, 111341, 131141, 114113, 114311, 411113, 411311, 113141, 114131, 311141, 411131, 211412, 211214, 211232, 23311120],
@@ -111,13 +110,14 @@ import Utils from '@modules/Utils'
     };
     // --| Export
     exports.code128 = code128;
-// })()
 export default {
     name: 'Printing',
-    components: {},
+    props: {
+        printID: Number
+    },
     data() {
         return {
-            applyId: this.$route.query.applyId,
+            // applyId: this.$route.query.applyId,
             magnification: 1,
             testData: {},
             tableData: {
@@ -142,20 +142,20 @@ export default {
             },
             age: '',
             bmi: '',
-            nowTime: ''
+            nowTime: '',
+            value: this.printID
         }
     },
     created() {
         // this.id && Popup.showLoading('数据加载中...')
-        console.log(this.applyId)
-        this.reservationApplyFun()
+        // this.reservationApplyFun()
         this.nowTime = Utils.formatTime(Utils.getTime())
     },
     methods: {
         // 获取报告数据
-        reservationApplyFun() {
+        reservationApplyFun(val) {
             let _data = {
-                applyId: this.applyId
+                applyId: val
             }
             patientService.reservationApplyForm(_data).then(data => {
                 data || (data = {})
@@ -167,7 +167,7 @@ export default {
                 this.age = this.timeChange(this.tableData.birthday)
                 this.setBMI()
                 Popup.showToast.Success('提交成功,请打印报告！')
-                document.getElementById('div128').innerHTML = code128(this.tableData.hisId, 'B');
+                document.getElementById('div128').innerHTML = code128(this.tableData.reservationNumber, 'B');
             }, error => {
                 Popup.hideLoading()
                 patientService.NetWorkFail()
@@ -187,7 +187,7 @@ export default {
         },
         // 返回上一页
         returnPage(){
-            this.$router.go(-1);
+            this.$emit('close', true)
         },
         // 计算 BMI
         setBMI() {

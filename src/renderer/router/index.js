@@ -8,23 +8,9 @@ Vue.use(Router)
 
 export default new Router({
     routes: [{
-        path: '*',
-        redirect: '/mainWindow'
-    },
-    {
-        path: '/mainWindow',
-        name: 'MainWindow',
-        component: require('@/pages/MainWindow.vue').default,
-        children: [{
-            path: '',
-            name: 'Home',
-            component: Home
-        }, {
-            path: 'setting',
-            name: 'Setting',
-            component: Setting
-        }
-        ]
+        path: '/Home',
+        name: 'Home',
+        component: Home
     },
     {
         path: '/auth',
@@ -35,6 +21,11 @@ export default new Router({
         path: '/Printing',
         name: 'Printing',
         component: Rrinting
+    },
+    {
+        path: '/setting',
+        name: 'Setting',
+        component: Setting
     }
     ]
 })

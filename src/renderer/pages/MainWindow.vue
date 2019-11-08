@@ -19,7 +19,6 @@ export default {
     name: 'MainWindow',
     components: { MainFrame, Menus, MainHeader, MainFooter },
     created: function(){
-        console.log(this.$route.name)
         currentWindow.setSize(WIN_CONFIG['width'], WIN_CONFIG['height'])
     }
 }
