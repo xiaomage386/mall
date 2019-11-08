@@ -1,6 +1,6 @@
 <template>
     <div class="home">
-        <site-head></site-head>
+        <site-head title="肺功能预约补录系统"></site-head>
         <el-dialog :visible.sync="dialogFormVisible.isVisble"
             width="630px"
             title="新增预约">
@@ -30,14 +30,10 @@
                     <el-col :span="12" v-for="(item, index) in reservationArray" :key="index">
                         <span v-text="index == '0' ? '上午' : '下午'"></span>
                         <table>
-                            <template v-for='value in item'>
-                                <tr>
-                                    <th :class="{blue:i===value.index}" @click="timeSlotFun(value)">{{value.timeSlot}}</th>
-                                    <template v-for='tds in value.list'>
-                                        <td>{{tds.name}}</td>
-                                    </template>
-                                </tr>
-                            </template>
+                            <tr v-for='(value, index) in item' :key="index">
+                                <th :class="{blue:i===value.index}" @click="timeSlotFun(value)">{{value.timeSlot}}</th>
+                                <td v-for='(tds, index) in value.list' :key="index">{{tds.name}}</td>
+                            </tr>
                         </table>
                     </el-col>
                 </el-row>
@@ -51,9 +47,9 @@
             <el-form :model="ruleForm" label-position="right" :rules="rules" ref="ruleForm" label-width="100px">
                 <el-row>
                     <el-col :span="8">
-                        <div class="title">填写基本信息</div>
+                        <div class="title">填写基本信息{{hisId}} {{ruleForm.hisId}}</div>
                         <el-form-item label="ID" prop="hisId">
-                            <el-input v-model="hisId"></el-input>
+                            <el-input v-model="hisId" @blur="hisIdChange"></el-input>
                         </el-form-item>
                         <el-form-item label="住院号">
                             <el-input v-model="ruleForm.clinicNum"></el-input>
@@ -143,7 +139,7 @@
                         </el-form-item>
                         <el-form-item label="检测预约">
                             <div v-if="isReservation">
-                                <div class="type-item" v-for="(item, index) in reservationApplys" >
+                                <div class="type-item" v-for="(item, index) in reservationApplys" :key="index">
                                     <b>{{item.checkProject == 0 ? '常规肺功能' : '舒张实验'}}</b>
                                     <p>{{item.applyDate}}</p>
                                     <i @click="delReservationFun" class="icon-btn icon-close-white"></i>
@@ -169,6 +165,8 @@ import Utils from '@modules/Utils';
 import APP_CONFIG from '@/app.config'
 import REMOTE_CONFIG from '@/../main/config'
 import localStorage from '@modules/localStorage'
+import Printing from '@/pages/Printing/Printing'
+import Menus from '@/components/Menu/Menus.vue'
 const TEST_EXE = APP_CONFIG['NAME'] + '_TEST_EXE';
 const { remote, ipcRenderer } = require('electron')
 var spawn = require('child_process').spawn;
@@ -183,6 +181,7 @@ var lastCode = null;
 var nextCode = null;
 export default {
     name: 'Home',
+    components: {Printing, Menus},
     data() {
         return {
             loading: false,
@@ -307,22 +306,33 @@ export default {
                 patientService.NetWorkFail()
             })
         },
+        hisIdChange() {
+            this.ruleForm.hisId = this.hisId
+        },
         // 预约时间弹窗确定选择
         dialogFun() {
             let isFull = 0
-            let list = this.array[this.i].list
-            for (let i = 0; i < list.length; i++) {
-                if (Utils.size(list[i]) > 0) {
-                    isFull = isFull + 1
-                }
-            }
             let time = this.date + ' ' + this.reservationDate;
-            if (!Utils.size(this.reservationDate)) {
-                Popup.showToast.Warning('请选择预约项目')
-                return
-            }
             if (!Utils.size(this.typeSelect)) {
                 Popup.showToast.Warning('请选择检测项目')
+                return
+            }
+            if (!Utils.size(this.date)) {
+                Popup.showToast.Warning('请选择预约日期')
+                return
+            }
+            if (Utils.size(this.array) > 0) {
+                if (this.i != '') {
+                    let list = this.array[this.i].list
+                    for (let i = 0; i < list.length; i++) {
+                        if (Utils.size(list[i]) > 0) {
+                            isFull = isFull + 1
+                        }
+                    }
+                }
+            }
+            if (!Utils.size(this.reservationDate)) {
+                Popup.showToast.Warning('请选择预约时间段')
                 return
             }
             if (isFull == 3) {
@@ -362,17 +372,6 @@ export default {
             this.typeSelect = ''
             this.date = ''
             this.reservationArray = []
-        },
-        submitForm(formName) {
-            this.isUpdate = 1
-            this.$refs[formName].validate((valid) => {
-            if (valid) {
-                // alert('submit!');
-            } else {
-                console.log('error submit!!');
-                return false;
-            }
-            });
         },
         // 清空数据
         resetForm(formName) {
@@ -634,5 +633,8 @@ export default {
 .blue {
     background: #3394f5;
     color: #fff;
+}
+Menus{
+    width: 65px;
 }
 </style>
