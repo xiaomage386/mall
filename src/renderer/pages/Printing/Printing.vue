@@ -37,9 +37,9 @@
                     <tr><th>体重：</th><td><span v-text="tableData.weight"></span> kg</td><th>身高：</th><td><span v-text="tableData.height"></span> cm</td><th>BMI：</th><td v-text="bmi"></td></tr>
                     <tr><th>出生日期：</th><td v-text="tableData.birthday"></td><th>年龄：</th><td><span v-text="age"></span> 岁</td><th>电话：</th><td v-text="tableData.mobile"></td></tr>
                     <tr><th>职业：</th><td v-text="tableData.job"></td><th>吸烟史：</th><td><span v-text="tableData.smokingHistory"></span> 年</td><th>吸烟量：</th><td><span v-text="tableData.smokingVolume"></span> 支/天</td></tr>
-                    <tr><th>已戒烟：</th><td><span v-text="tableData.quitSmoking"></span> 年</td><th>既往史：</th><td></td><th>检查时间：</th><td v-text="tableData.applyDate"></td></tr>
+                    <tr><th>已戒烟：</th><td><span v-text="tableData.quitSmoking"></span> 年</td><th>既往史：</th><td>{{tableData.medicalHistory}}</td><th>检查时间：</th><td v-text="tableData.applyDate"></td></tr>
                     <tr><th>检查项目：</th><td>{{tableData.checkProject == 0 ? '常规肺功能' : '激发试验'}}</td><th>籍贯：</th><td colspan="3" v-text="tableData.address"></td></tr>
-                    <tr><th>备注：</th><td colspan="5"></td></tr>
+                    <tr><th>备注：</th><td colspan="5"><span>{{tableData.remarks}}</span></td></tr>
                     <tr><td colspan="6" style="height: 750px;"></td></tr>
                 </table>
             </div>
