@@ -319,30 +319,31 @@ export default {
     methods: {
         // 获取患者数据
         getHisInfoFun(data) {
-            if (!Utils.size(this.hisId)) {
-                return
-            }
-            let _data = {
-                hisId: data
-            }
-            Popup.showToast.Success('扫描成功，正在获取数据')
-            patientService.getHisInfo(_data).then(data => {
-                data || (data = {})
-                if (data['code'] != commonService.STATUS_SUCCESS) {
-                    commonService.Warning(data['code'], data['msg'])
-                    return data
+            if (Utils.size(this.hisId) < 3) {
+                return false
+            } else {
+                let _data = {
+                    hisId: data
                 }
-                this.ruleForm = data.object || {}
-                this.gender = this.ruleForm.gender == '0' ? '男' : '女'
-                this.setBMI()
-                this.timeChange()
-                this.hisId = this.ruleForm.hisId
-                this.$refs['ruleForm'].resetFields()
-                this.getReservationList()
-            }, error => {
-                Popup.hideLoading()
-                patientService.NetWorkFail()
-            })
+                Popup.showToast.Success('扫描成功，正在获取数据')
+                patientService.getHisInfo(_data).then(data => {
+                    data || (data = {})
+                    if (data['code'] != commonService.STATUS_SUCCESS) {
+                        commonService.Warning(data['code'], data['msg'])
+                        return data
+                    }
+                    this.ruleForm = data.object || {}
+                    this.gender = this.ruleForm.gender == '0' ? '男' : '女'
+                    this.setBMI()
+                    this.timeChange()
+                    this.hisId = this.ruleForm.hisId
+                    this.$refs['ruleForm'].resetFields()
+                    this.getReservationList()
+                }, error => {
+                    Popup.hideLoading()
+                    patientService.NetWorkFail()
+                })
+            }
         },
         hisIdChange() {
             this.ruleForm.hisId = this.hisId
