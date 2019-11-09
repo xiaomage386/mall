@@ -84,7 +84,6 @@
         "element-ui": "^2.6.1",
         "lodash": "^4.17.15",
         "mockjs": "^1.0.1-beta3",
-        "node-hid": "^0.7.7",
         "store.js": "^1.0.4",
         "vue": "^2.5.16",
         "vue-echarts": "^4.0.1",
