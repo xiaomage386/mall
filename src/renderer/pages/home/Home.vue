@@ -3,7 +3,7 @@
         <div class="noPrn">
             <site-head showTitle="肺功能预约补录系统"></site-head>
         </div>
-        <div v-show="!isPrint">
+        <div id="main" v-show="!isPrint">
             <Menus slot="menus"></Menus>
             <div class="content">
                 <el-form :model="ruleForm" label-position="right" :rules="rules" ref="ruleForm" label-width="100px">
@@ -11,7 +11,7 @@
                         <el-col :span="7">
                             <div class="title">填写基本信息</div>
                             <el-form-item label="ID" prop="hisId">
-                                <el-input v-model="hisId" @blur="hisIdChange"></el-input>
+                                <el-input v-model="hisId" id="hisIdInput" @keyup.enter.native="getHisInfoFun" @input="hisIdChange"></el-input>
                             </el-form-item>
                             <el-form-item label="住院号">
                                 <el-input v-model="ruleForm.clinicNum"></el-input>
@@ -58,7 +58,7 @@
                                 </el-col>
                             </el-form-item>
                             <div class="foot-btn">
-                                <el-button type="danger" @click="resetForm('ruleForm')">清空</el-button>
+                                <el-button type="danger" @click="resetForm()">清空</el-button>
                                 <el-button type="primary" @click="showPrint()">打印</el-button>
                                 <el-button type="primary" @click="reservationSaveFun('ruleForm')">提交</el-button>
                             </div>
@@ -116,25 +116,29 @@
                                 <el-form-item>
                                     <calendar ref="calendarRef" @calendarDate="calendarDate" @calendarMonth="calendarMonth" :calIndex="calIndex"></calendar>
                                 </el-form-item>
-                            </el-col>
-                            <!-- <el-col :span="18" >
                                 <el-form-item label="检测项目">
-                                    <div v-if="isReservation">
+                                    <div class="type-item">
+                                        <span v-if="typeSelect === ''">
+                                            <b>-</b><span> {{date}} {{reservationDate}}</span>
+                                        </span>
+                                        <span v-else>
+                                            <b>{{typeSelect == 0 ? '常规肺功能' : '激发实验'}}</b><span> {{date}} {{reservationDate}}</span>
+                                        </span>
+                                    </div>
+                                    <!-- <div v-if="isReservation">
                                         <div class="type-item" v-for="(item, index) in reservationApplys" :key="index">
                                             <b>{{item.checkProject == 0 ? '常规肺功能' : '激发实验'}}</b>
-                                            <p>{{item.applyDate}}</p>
-                                            <i @click="delReservationFun" class="icon-btn icon-close-white"></i>
+                                            <span> {{item.applyDate}}</span>
                                         </div>
                                     </div>
                                     <div v-else>
                                         <div class="type-item">
-                                            <b>检测项目</b>
-                                            <p>0000-00-00 00:00:00</p>
+                                            <b>-</b><span> -</span>
                                         </div>
-                                    </div>
-                                    <el-button v-else @click="reservationInfoFun" class="type-btn" type="primary">+选择时间段</el-button>
+                                    </div> -->
+                                    <!-- <el-button v-else @click="reservationInfoFun" class="type-btn" type="primary">+选择时间段</el-button> -->
                                 </el-form-item>
-                            </el-col> -->
+                            </el-col>
                             <el-col :span="24">
                                 <el-form-item label="预约信息" class="re-scroll" v-if="List.length > 0">
                                     <div class="box">
@@ -167,7 +171,7 @@
                                 <table>
                                     <tr v-for='(value, index) in item' :key="index">
                                         <th :class="{blue:i===value.index}" @click="timeSlotFun(value)">{{value.timeSlot}}</th>
-                                        <td v-for='(tds, index) in value.list' :key="index">{{tds.name}}</td>
+                                        <td v-for='(tds, index) in value.list' :key="index" v-if="index < 3">{{tds.name}}</td>
                                     </tr>
                                 </table>
                             </el-col>
@@ -235,7 +239,7 @@ export default {
             },
             rules: {
                 hisId: [
-                    { required: true, message: '请输入ID', trigger: 'blur' }
+                    { required: true, message: '请输入ID', trigger: 'change' }
                 ],
                 name: [
                     { required: true, message: '请输入姓名', trigger: 'blur' }
@@ -267,15 +271,22 @@ export default {
             printID: 0, // 打印页面上传数据的id
             isReservation: 0, // 新增预约按钮隐藏与显示
             isPrint: false, // 报告页还是打印页
-            calIndex: '', // 点击日历变色
             calDate: '', // 上传给日历的天数
+            calIndex: '', // 点击日历变色
             isUpdate: 0 // 0 数据未上传，1 数据已上传
         }
     },
     mounted() {
-        // 扫描枪
         let _this = this;
-        document.onkeydown = function(e){
+        // 如果 hisid 为空，则获取焦点
+        document.getElementById('main').onclick = function() {
+            _this.focusHisId()
+        }
+        document.getElementById('main').onkeydown = function() {
+            _this.focusHisId()
+        }
+        // 扫描枪
+        /* document.onkeydown = function(e){
             let code = ''
             // 兼容性处理
             if (window.event) {
@@ -311,10 +322,11 @@ export default {
                 lastCode = nextCode;
                 lastTime = nextTime;
             }
-        }
+        } */
     },
     created() {
         this.checkAddress = localStorage.get(HOSPITAL) ? localStorage.get(HOSPITAL) : ''
+        this.focusHisId()
     },
     methods: {
         // 获取患者数据
@@ -323,7 +335,7 @@ export default {
                 return false
             } else {
                 let _data = {
-                    hisId: data
+                    hisId: this.hisId
                 }
                 Popup.showToast.Success('扫描成功，正在获取数据')
                 patientService.getHisInfo(_data).then(data => {
@@ -386,7 +398,7 @@ export default {
                 Popup.showToast.Warning('请选择预约时间段')
                 return
             }
-            if (isFull == 3) {
+            if (isFull >= 3) {
                 Popup.showToast.Warning('此预约已满，请选择其他时间段')
                 return
             }
@@ -397,18 +409,9 @@ export default {
         },
          // 查询预约时间段
         reservationInfoFun() {
-            if (!Utils.size(this.typeSelect)) {
-                Popup.showToast.Warning('请选择检测项目')
-                return
-            }
-            if (!Utils.size(this.date)) {
-                Popup.showToast.Warning('请选择预约日期')
-                return
-            }
             this.dialogFormVisible.isVisble = true
             let _data = {
-                applyDate: this.date,
-                checkProject: this.typeSelect || ''
+                applyDate: this.date
             }
             patientService.reservationInfo(_data).then(data => {
                 data || (data = {})
@@ -441,8 +444,12 @@ export default {
                     return false;
                 }
             });
-            if (Utils.size(this.reservationApplys) == 0) {
-                Popup.showToast.Warning('请选择预约项目和时间')
+            if (Utils.size(this.typeSelect) == 0) {
+                Popup.showToast.Warning('请选择预约项目')
+                return
+            }
+            if (Utils.size(this.date) == 0 && Utils.size(this.reservationDate) == 0) {
+                Popup.showToast.Warning('请选择预约时间')
                 return
             }
             document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -463,6 +470,7 @@ export default {
                 this.isUpdate = 1
                 this.getReservationList()
                 localStorage.set(HOSPITAL, this.checkAddress)
+                this.$refs.calendarRef.getDateNumberList(this.date)
             }, error => {
                 Popup.hideLoading()
                 patientService.NetWorkFail()
@@ -481,7 +489,7 @@ export default {
             }
         },
         clearInfo() {
-            this.$refs['ruleForm'].resetFields();
+            this.$refs.ruleForm.resetFields();
             this.ruleForm = {
                 hisId: '',
                 clinicNum: '',
@@ -512,10 +520,20 @@ export default {
             this.calIndex = ''
             this.calDate = ''
             this.$refs.calendarRef.clearI()
+            this.focusHisId()
+        },
+        // ID input 框获取焦点
+        focusHisId() {
+            this.$nextTick(() => {
+                setTimeout(() => {
+                    document.getElementById('hisIdInput').focus()
+                }, 100)
+            })
         },
         // 关闭打印页面
         closePrint() {
             this.isPrint = false
+            this.focusHisId()
         },
         // 打开打印页面
         showPrint() {
@@ -540,11 +558,11 @@ export default {
         },
         // 获取日历列表
         getCalendarDate(val) {
-            this.delReservationFun()
-            if (!Utils.size(this.typeSelect)) {
-                return
+            if (this.hisId === '') {
+                this.focusHisId()
             }
-            this.$refs.calendarRef.getDateNumberList(this.calDate, this.typeSelect)
+            this.delReservationFun()
+            this.$refs.calendarRef.getDateNumberList(this.calDate)
         },
         // 计算 BMI
         setBMI() {
@@ -651,6 +669,10 @@ export default {
         cursor: default;
         b{
             font-size: 16px;
+            span{
+                font-size: 14px;
+                font-weight: 400;
+            }
         }
         p{
             color: #fff;
@@ -747,9 +769,12 @@ export default {
 }
 .re-info span{padding-left: 5px;}
 .re-scroll{
-    height: 170px; 
+    height: 100px; 
     overflow: auto;
     line-height: 1;
     margin-bottom: 0;
 }
+.re-scroll .box{cursor: default;}
+.re-scroll .box span{cursor: pointer;}
+.re-scroll .box span:hover{color: #3394f5;}
 </style>

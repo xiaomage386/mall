@@ -29,6 +29,7 @@ CONFIG['LOCAL_ADDRESS'] = 'http://127.0.0.1/';
 CONFIG['REMOTE_ADDRESS'] = 'http://www.creaker.net/';
 
 CONFIG['HOST'] = localStorage.getObject(SERVICE_TYPE) == 1 ? CONFIG['LOCAL_ADDRESS'] : CONFIG['REMOTE_ADDRESS'];
+CONFIG['HOST'] = 'http://127.0.0.1:10241/';
 CONFIG['DOMAIN'] = 'creaker.net';
 CONFIG['APP_RUNTIME'] = 'webapp'
 CONFIG['RUNTIME'] = 'creaker';

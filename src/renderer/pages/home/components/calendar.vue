@@ -61,14 +61,15 @@ export default {
         }
     },
     created() {
-        this.initData(null);
+        this.initData(null)
+        let date = new Date()
+        this.getDateNumberList(date)
     },
     methods: {
         // 获取预约人数
-        getDateNumberList(date, type) {
+        getDateNumberList(date) {
             let _data = {
-                applyDate: date,
-                checkProject: type
+                applyDate: date
             }
             patientService.getDateNumberList(_data).then(data => {
                 data || (data = {})

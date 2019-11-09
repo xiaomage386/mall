@@ -13,7 +13,7 @@
         </el-dialog>
         <div class="title">默认选项配置</div>
         <div class="config-list">
-            <div class="list-title">上传 pdf 文件目录</div>
+            <div class="list-title">检测扫描报告路径</div>
             <el-button @click="pdfFile">选择目录</el-button><span v-text="pdfFildPath"></span>
         </div> 
         <div class="config-list">
