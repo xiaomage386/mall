@@ -28,11 +28,11 @@
                     <i slot="suffix"
                        class="icon-btn icon-close-white winNoDrag"
                        @click="Close()"></i>
-                    <div class="service"
+                    <!-- <div class="service"
                          @click="configService">
                         <i class="icon icon-setting"></i>
                         服务配置
-                    </div>
+                    </div> -->
                 </div>
                 <div class="window-bar winDrag"></div>
                 <div class="title">肺功能预约补录系统</div>
@@ -61,6 +61,11 @@
                 <el-button type="primary"
                            @click="submitForm"
                            :loading="loading" :disabled="loginDisabled">登录</el-button>
+                <div class="set-wrapper">
+                    <div class="settings">
+                        <a @click="handleForgetPw">忘记密码</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -243,7 +248,7 @@ export default {
 .auth .content .decorate .desc{font-size: 14px;}
 .auth .content .decorate .icon-btn{position: absolute;right: 5px;top: 5px;cursor: pointer;}
 .auth .content .decorate .icon-btn.icon-hide-white{right: 25px;}
-.auth .content .title{font-size: 18px;color: #fff;margin-bottom: 18px; margin-top: 8px; text-align: center;}
+.auth .content .title{font-size: 18px;color: #fff;margin-bottom: 18px; text-align: center;}
 .auth .content .window-bar{position: absolute;left: 0;right: 50px;top: 0;height: 40px;}
 .auth .content .el-form-item{margin-bottom: 15px;}
 .auth .content .el-button {padding: 0;width: 100%;border-radius: 2px;height: 40px;line-height: 40px;font-size: 14px;background-color: #fff;color: #333; border-color: #fff; }

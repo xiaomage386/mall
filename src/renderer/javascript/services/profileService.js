@@ -8,7 +8,7 @@ class ProfileService extends BaseService {
 	 * @constructor
 	 */
     forgetPassword(username) {
-        return this.httpClient.post('api.client.doctor.forgetPassword', {username: username}, { login: false })
+        return this.httpClientJson.post('api.doctor.forgetPassword', {username: username}, { login: false })
     }
 
     /***
@@ -16,8 +16,9 @@ class ProfileService extends BaseService {
 	* @constructor
     * @param oldPassword [旧密码]  newPassword [新密码]
 	*/
-    modifyPassword(oldPassword, newPassword) {
-        return this.httpClient.post('api.client.doctor.modifyPassword', {oldPassword, newPassword})
+    modifyPassword(config = {}) {
+        let _config = Utils.toJson(config)
+        return this.httpClientJson.post('api.doctor.modifyPassword', _config)
     }
 }
 

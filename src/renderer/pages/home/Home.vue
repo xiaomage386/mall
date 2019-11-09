@@ -737,7 +737,7 @@ export default {
 }
 .re-info{
     line-height: 1;
-    margin-bottom: 13px;
+    margin-top: 13px;
 }
 .re-info b{
     font-weight: 400;
@@ -746,7 +746,7 @@ export default {
 }
 .re-info span{padding-left: 5px;}
 .re-scroll{
-    height: 80px; 
+    height: 170px; 
     overflow: auto;
     line-height: 1;
     margin-bottom: 0;

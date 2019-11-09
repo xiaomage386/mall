@@ -19,11 +19,11 @@
                 <i class="icon icon-logout"></i>
                 注销
             </div>
-            <!-- <div class="account-btn"
+            <div class="account-btn"
                  @click="dialogFormVisible = true">
                 <i class="icon icon-key"></i>
                 修改密码
-            </div> -->
+            </div>
         </div>
         <el-dialog :visible.sync="dialogFormVisible"
                    width="424px"
@@ -51,8 +51,9 @@
                     <div class="sub-title">确认新密码</div>
                     <el-col class="from-input">
                         <el-form-item prop="confirmPassword">
-                            <el-input v-model="form.confirmPassword"
+                            <el-input v-model="confirmPassword"
                                       show-password
+                                      @blur="confirmPasswordChange"
                                       maxlength="20"></el-input>
                         </el-form-item>
                     </el-col>
@@ -86,7 +87,12 @@ export default {
             }
         }
         return {
-            form: {},
+            form: {
+                oldPassword: '',
+                newPassword: '',
+                confirmPassword: ''
+            },
+            confirmPassword: '', // 确认新密码
             Profile: {},
             dialogFormVisible: false,
             outLoginStatus: true,
@@ -121,7 +127,11 @@ export default {
         submitForm() {
             this.$refs.form.validate((valid) => {
                 if (!valid) return
-                profileService.modifyPassword(this.form.oldPassword, this.form.newPassword).then(data => {
+                let _data = {
+                    oldPassword: this.form.oldPassword,
+                    newPassword: this.form.newPassword
+                }
+                profileService.modifyPassword(_data).then(data => {
                     data || (data = {})
                     if (data['code'] != commonService.STATUS_SUCCESS) {
                         commonService.Warning(data['code'], data['msg'])
@@ -132,6 +142,9 @@ export default {
                     })
                 }, commonService.NetWorkFail)
             });
+        },
+        confirmPasswordChange() {
+            this.form.confirmPassword = this.confirmPassword
         }
     }
 };
