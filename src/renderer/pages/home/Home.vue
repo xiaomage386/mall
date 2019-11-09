@@ -194,7 +194,7 @@ import localStorage from '@modules/localStorage'
 import Printing from '@/pages/Printing/Printing'
 import Menus from '@/components/Menu/Menus.vue'
 import calendar from './components/calendar'
-const TEST_EXE = APP_CONFIG['NAME'] + '_TEST_EXE';
+const HOSPITAL = APP_CONFIG['NAME'] + '_HOSPITAL_LOCAL';
 const { remote, ipcRenderer } = require('electron')
 var spawn = require('child_process').spawn;
 const os = require('os')
@@ -312,6 +312,9 @@ export default {
                 lastTime = nextTime;
             }
         }
+    },
+    created() {
+        this.checkAddress = localStorage.get(HOSPITAL) ? localStorage.get(HOSPITAL) : ''
     },
     methods: {
         // 获取患者数据
@@ -458,50 +461,56 @@ export default {
                 this.$refs.printRef.reservationApplyFun(this.printID);
                 this.isUpdate = 1
                 this.getReservationList()
+                localStorage.set(HOSPITAL, this.checkAddress)
             }, error => {
                 Popup.hideLoading()
                 patientService.NetWorkFail()
             })
         },
         // 清空数据
-        resetForm(formName) {
+        resetForm() {
             if (this.isUpdate === 0) {
                 Popup.confirm(`预约数据未提交，是否确定清除数据？`).then(flag => {
                     if (flag) {
-                        this.$refs[formName].resetFields();
-                        this.ruleForm = {
-                            hisId: '',
-                            clinicNum: '',
-                            name: '',
-                            gender: '',
-                            birthday: '',
-                            weight: '',
-                            height: '',
-                            mobile: '',
-                            address: '',
-                            job: '',
-                            medicalHistory: '',
-                            smokingVolume: '',
-                            quitSmoking: '',
-                            remarks: ''
-                        }
-                        this.List = {}
-                        this.isReservation = 0
-                        this.reservationApplys = []
-                        this.typeSelect = ''
-                        this.date = ''
-                        this.reservationArray = []
-                        this.age = ''
-                        this.BMI = ''
-                        this.i = ''
-                        this.hisId = ''
-                        this.gender = ''
-                        this.calIndex = ''
-                        this.calDate = ''
-                        this.$refs.calendarRef.clearI()
+                        this.clearInfo()
                     }
                 })
+            } else {
+                this.clearInfo()
             }
+        },
+        clearInfo() {
+            this.$refs['ruleForm'].resetFields();
+            this.ruleForm = {
+                hisId: '',
+                clinicNum: '',
+                name: '',
+                gender: '',
+                birthday: '',
+                weight: '',
+                height: '',
+                mobile: '',
+                address: '',
+                job: '',
+                medicalHistory: '',
+                smokingVolume: '',
+                quitSmoking: '',
+                remarks: ''
+            }
+            this.List = {}
+            this.isReservation = 0
+            this.reservationApplys = []
+            this.typeSelect = ''
+            this.date = ''
+            this.reservationArray = []
+            this.age = ''
+            this.BMI = ''
+            this.i = ''
+            this.hisId = ''
+            this.gender = ''
+            this.calIndex = ''
+            this.calDate = ''
+            this.$refs.calendarRef.clearI()
         },
         // 关闭打印页面
         closePrint() {
