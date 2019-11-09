@@ -57,6 +57,11 @@
                                     <el-input v-model="BMI"></el-input>
                                 </el-col>
                             </el-form-item>
+                            <div class="foot-btn">
+                                <el-button type="danger" @click="resetForm('ruleForm')">清空</el-button>
+                                <el-button type="primary" @click="showPrint()">打印</el-button>
+                                <el-button type="primary" @click="reservationSaveFun('ruleForm')">提交</el-button>
+                            </div>
                         </el-col>
                         <el-col :span="7">
                             <div class="title">填写选填信息</div>
@@ -112,8 +117,8 @@
                                     <calendar ref="calendarRef" @calendarDate="calendarDate" @calendarMonth="calendarMonth" :calIndex="calIndex"></calendar>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="18" >
-                                <el-form-item label="检测时间">
+                            <!-- <el-col :span="18" >
+                                <el-form-item label="检测项目">
                                     <div v-if="isReservation">
                                         <div class="type-item" v-for="(item, index) in reservationApplys" :key="index">
                                             <b>{{item.checkProject == 0 ? '常规肺功能' : '激发实验'}}</b>
@@ -121,9 +126,15 @@
                                             <i @click="delReservationFun" class="icon-btn icon-close-white"></i>
                                         </div>
                                     </div>
+                                    <div v-else>
+                                        <div class="type-item">
+                                            <b>检测项目</b>
+                                            <p>0000-00-00 00:00:00</p>
+                                        </div>
+                                    </div>
                                     <el-button v-else @click="reservationInfoFun" class="type-btn" type="primary">+选择时间段</el-button>
                                 </el-form-item>
-                            </el-col>
+                            </el-col> -->
                             <el-col :span="24">
                                 <el-form-item label="预约信息" class="re-scroll" v-if="List.length > 0">
                                     <div class="box">
@@ -134,14 +145,9 @@
                         </el-col>
                     </el-row>
                 </el-form>
-                <div class="foot-btn">
-                    <el-button type="danger" @click="resetForm('ruleForm')">清空</el-button>
-                    <el-button type="primary" @click="showPrint()">打印</el-button>
-                    <el-button type="primary" @click="reservationSaveFun('ruleForm')">提交</el-button>
-                </div>
                 <el-dialog :visible.sync="dialogFormVisible.isVisble"
                     width="630px"
-                    title="新增预约">
+                    title="预约时间">
                     <el-row>
                         <span class="label-item">预约时间</span>
                         <el-col :span="10">
@@ -380,7 +386,8 @@ export default {
                 Popup.showToast.Warning('此预约已满，请选择其他时间段')
                 return
             }
-            this.reservationApplys.push({'checkProject': this.typeSelect, 'applyDate': time})
+            // this.reservationApplys.push({'checkProject': this.typeSelect, 'applyDate': time})
+            this.reservationApplys = [{'checkProject': this.typeSelect, 'applyDate': time}]
             this.dialogFormVisible.isVisble = false
             this.isReservation = 1
         },
@@ -418,9 +425,43 @@ export default {
             this.reservationApplys = []
             this.reservationDate = ''
             this.i = ''
-            /* this.typeSelect = ''
-            this.date = '' */
             this.reservationArray = []
+        },
+        // 点击提交数据
+        reservationSaveFun(formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    // alert('submit!');
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
+            if (Utils.size(this.reservationApplys) == 0) {
+                Popup.showToast.Warning('请选择预约项目和时间')
+                return
+            }
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
+            this.ruleForm.gender = this.gender == '男' ? '0' : '1'
+            let _data = this.ruleForm
+            _data.gender = this.gender == '男' ? '0' : '1'
+            _data.reservationApplys = this.reservationApplys
+            patientService.reservationSave(_data).then(data => {
+                data || (data = {})
+                if (data['code'] != commonService.STATUS_SUCCESS) {
+                    commonService.Warning(data['code'], data['msg'])
+                    return data
+                }
+                Popup.showToast.Success('提交成功！')
+                this.printID = data.object.applyId
+                this.isPrint = true
+                this.$refs.printRef.reservationApplyFun(this.printID);
+                this.isUpdate = 1
+                this.getReservationList()
+            }, error => {
+                Popup.hideLoading()
+                patientService.NetWorkFail()
+            })
         },
         // 清空数据
         resetForm(formName) {
@@ -461,6 +502,39 @@ export default {
                     }
                 })
             }
+        },
+        // 关闭打印页面
+        closePrint() {
+            this.isPrint = false
+        },
+        // 打开打印页面
+        showPrint() {
+            this.$refs.printRef.updateNowTime()
+            this.isPrint = true
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
+        },
+        // 预约信息查看打印页面
+        readPrint(val) {
+            this.showPrint()
+            this.$refs.printRef.reservationApplyFun(val);
+        },
+        // 获取自组件日历点击的返回天数
+        calendarDate(val) {
+            this.date = val
+            this.reservationInfoFun()
+        },
+        // 获取自组件日历点击上月下月返回天数
+        calendarMonth(val) {
+            this.calDate = val
+            this.getCalendarDate(val)
+        },
+        // 获取日历列表
+        getCalendarDate(val) {
+            this.delReservationFun()
+            if (!Utils.size(this.typeSelect)) {
+                return
+            }
+            this.$refs.calendarRef.getDateNumberList(this.calDate, this.typeSelect)
         },
         // 计算 BMI
         setBMI() {
@@ -517,72 +591,6 @@ export default {
         timeSlotFun(val) {
             this.i = val.index
             this.reservationDate = val.time
-        },
-        // 点击提交数据
-        reservationSaveFun(formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    // alert('submit!');
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
-            if (Utils.size(this.reservationApplys) == 0) {
-                Popup.showToast.Warning('请选择预约项目和时间')
-                return
-            }
-            document.body.scrollTop = document.documentElement.scrollTop = 0;
-            this.ruleForm.gender = this.gender == '男' ? '0' : '1'
-            let _data = this.ruleForm
-            _data.gender = this.gender == '男' ? '0' : '1'
-            _data.reservationApplys = this.reservationApplys
-            patientService.reservationSave(_data).then(data => {
-                data || (data = {})
-                if (data['code'] != commonService.STATUS_SUCCESS) {
-                    commonService.Warning(data['code'], data['msg'])
-                    return data
-                }
-                Popup.showToast.Success('提交成功！')
-                this.printID = data.object.applyId
-                this.isPrint = true
-                this.$refs.printRef.reservationApplyFun(this.printID);
-                this.isUpdate = 1
-                this.getReservationList()
-            }, error => {
-                Popup.hideLoading()
-                patientService.NetWorkFail()
-            })
-        },
-        // 关闭打印页面
-        closePrint() {
-            this.isPrint = false
-        },
-        // 打开打印页面
-        showPrint() {
-            this.isPrint = true
-            document.body.scrollTop = document.documentElement.scrollTop = 0;
-        },
-        // 预约信息查看打印页面
-        readPrint(val) {
-            this.showPrint()
-            this.$refs.printRef.reservationApplyFun(val);
-        },
-        // 获取自组件日历点击的返回天数
-        calendarDate(val) {
-            this.date = val
-        },
-        // 获取自组件日历点击上月下月返回天数
-        calendarMonth(val) {
-            this.calDate = val
-            this.getCalendarDate(val)
-        },
-        // 获取日历列表
-        getCalendarDate(val) {
-            if (!Utils.size(this.typeSelect)) {
-                return
-            }
-            this.$refs.calendarRef.getDateNumberList(this.calDate, this.typeSelect)
         }
     }
 };
@@ -718,6 +726,10 @@ export default {
     background: #3394f5;
     color: #fff;
 }
+.re-info{
+    line-height: 1;
+    margin-bottom: 13px;
+}
 .re-info b{
     font-weight: 400;
     display: inline-block;
@@ -725,8 +737,9 @@ export default {
 }
 .re-info span{padding-left: 5px;}
 .re-scroll{
-    height: 70px; 
+    height: 80px; 
     overflow: auto;
     line-height: 1;
+    margin-bottom: 0;
 }
 </style>

@@ -208,6 +208,7 @@ export default {
     padding: 0;
     display: flex;
     justify-content: space-between;
+    line-height: 30px;
 }
 .month ul li {
     color: white;
@@ -247,6 +248,7 @@ export default {
     display: inline-block;
     width: 13.6%;
     text-align: center;
+    line-height: 25px;
 }
 .days {
     padding: 0;
@@ -269,8 +271,8 @@ export default {
     border-bottom: 1px solid #eee;
     box-sizing: border-box;
     cursor: default;
-    height: 50px;
-    line-height: 70px;
+    height: 45px;
+    line-height: 65px;
 }
 .days li.blue{
     position: relative;

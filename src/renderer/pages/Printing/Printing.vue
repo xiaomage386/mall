@@ -172,6 +172,9 @@ export default {
                 patientService.NetWorkFail()
             })
         },
+        updateNowTime() {
+            this.nowTime = Utils.formatTime(Utils.getTime())
+        },
         // 打印
         openPrint() {
             window.print()
