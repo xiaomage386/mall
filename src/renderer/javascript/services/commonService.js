@@ -109,7 +109,7 @@ class CommonService extends BaseService {
             //     currentWindow.center();
             // })
         }, 100)
-        Router.push({ path: '/auth' })
+        Router.push({ name: 'Auth' })
         text && this.Popup.toast.Warning(text)
     }
 

@@ -10,7 +10,7 @@ const CONFIG = {}
 
 // 浏览器窗口参数
 CONFIG['BrowserWindow'] = {
-    title: '格创肺功能-桌面端' || PACKAGE['name'],
+    title: '预约补录系统' || PACKAGE['name'],
     width: 1280,
     height: 720,
     minWidth: 1280,

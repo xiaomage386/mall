@@ -8,7 +8,7 @@
             <div class="content">
                 <el-form :model="ruleForm" label-position="right" :rules="rules" ref="ruleForm" label-width="100px">
                     <el-row>
-                        <el-col :span="8">
+                        <el-col :span="7">
                             <div class="title">填写基本信息</div>
                             <el-form-item label="ID" prop="hisId">
                                 <el-input v-model="hisId" @blur="hisIdChange"></el-input>
@@ -58,7 +58,7 @@
                                 </el-col>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :span="7">
                             <div class="title">填写选填信息</div>
                             <el-form-item label="籍贯">
                                 <el-input v-model="ruleForm.address"></el-input>
@@ -94,21 +94,43 @@
                                 <el-input type="textarea" v-model="ruleForm.remarks"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :span="10">
                             <div class="title">选择时间地点项目</div>
-                            <el-form-item label="检测地点">
-                                <el-input v-model="checkAddress"></el-input>
-                            </el-form-item>
-                            <el-form-item label="检测预约">
-                                <div v-if="isReservation">
-                                    <div class="type-item" v-for="(item, index) in reservationApplys" :key="index">
-                                        <b>{{item.checkProject == 0 ? '常规肺功能' : '舒张实验'}}</b>
-                                        <p>{{item.applyDate}}</p>
-                                        <i @click="delReservationFun" class="icon-btn icon-close-white"></i>
+                            <el-col :span="18">
+                                <el-form-item label="检测地点">
+                                    <el-input v-model="checkAddress"></el-input>
+                                </el-form-item>
+                                <el-form-item label="检测项目">
+                                    <el-select v-model="typeSelect" placeholder="请选择检测项目" @change="getCalendarDate">
+                                        <el-option label="常规肺功能" value="0"></el-option>
+                                        <el-option label="激发试验" value="1"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="24">
+                                <el-form-item>
+                                    <calendar ref="calendarRef" @calendarDate="calendarDate" @calendarMonth="calendarMonth" :calIndex="calIndex"></calendar>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="18" >
+                                <el-form-item label="检测时间">
+                                    <div v-if="isReservation">
+                                        <div class="type-item" v-for="(item, index) in reservationApplys" :key="index">
+                                            <b>{{item.checkProject == 0 ? '常规肺功能' : '激发实验'}}</b>
+                                            <p>{{item.applyDate}}</p>
+                                            <i @click="delReservationFun" class="icon-btn icon-close-white"></i>
+                                        </div>
                                     </div>
-                                </div>
-                                <el-button v-else @click="reservationFun" class="type-btn" type="primary">+新增预约</el-button>
-                            </el-form-item>
+                                    <el-button v-else @click="reservationInfoFun" class="type-btn" type="primary">+选择时间段</el-button>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="24">
+                                <el-form-item label="预约信息" class="re-scroll" v-if="List.length > 0">
+                                    <div class="box">
+                                        <div class="re-info" v-for="(item, index) in List" :key="index"><b>{{item.checkProject == 0 ? '常规肺功能' : '激发实验'}}</b> {{item.applyDate}} <span @click="readPrint(item.id)">查看</span></div>
+                                    </div>
+                                </el-form-item>
+                            </el-col>
                         </el-col>
                     </el-row>
                 </el-form>
@@ -120,15 +142,6 @@
                 <el-dialog :visible.sync="dialogFormVisible.isVisble"
                     width="630px"
                     title="新增预约">
-                    <el-row>
-                        <span class="label-item">检测项目</span>
-                        <el-col :span="10">
-                            <el-select v-model="typeSelect" placeholder="请选择检测项目" @change="reservationInfoFun">
-                                <el-option label="常规肺功能" value="0"></el-option>
-                                <el-option label="激发试验" value="1"></el-option>
-                            </el-select>
-                        </el-col>
-                    </el-row>
                     <el-row>
                         <span class="label-item">预约时间</span>
                         <el-col :span="10">
@@ -174,6 +187,7 @@ import REMOTE_CONFIG from '@/../main/config'
 import localStorage from '@modules/localStorage'
 import Printing from '@/pages/Printing/Printing'
 import Menus from '@/components/Menu/Menus.vue'
+import calendar from './components/calendar'
 const TEST_EXE = APP_CONFIG['NAME'] + '_TEST_EXE';
 const { remote, ipcRenderer } = require('electron')
 var spawn = require('child_process').spawn;
@@ -188,14 +202,13 @@ var lastCode = null;
 var nextCode = null;
 export default {
     name: 'Home',
-    components: {Printing, Menus},
+    components: {Printing, Menus, calendar},
     data() {
         return {
             loading: false,
             dialogFormVisible: {
                 isVisble: false
             },
-            isPrint: false, // 报告页还是打印页
             hisId: '',
             gender: '', // 性别
             ruleForm: {
@@ -234,6 +247,7 @@ export default {
                     { required: true, message: '请输入身高', trigger: 'blur' }
                 ]
             },
+            List: {}, // 已预约信息
             BMI: '', // bmi
             age: '', // 年龄
             checkAddress: '', // 检测地址
@@ -243,9 +257,12 @@ export default {
             reservationArray: [], // 预约时间段重组数组
             i: '', // 时间段选择变色
             reservationApplys: [], // 预约提交数据
-            reservationDate: '', // 预约的日期
-            isReservation: 0, // 新增预约按钮隐藏与显示
+            reservationDate: '', // 预约的时间段
             printID: 0, // 打印页面上传数据的id
+            isReservation: 0, // 新增预约按钮隐藏与显示
+            isPrint: false, // 报告页还是打印页
+            calIndex: '', // 点击日历变色
+            calDate: '', // 上传给日历的天数
             isUpdate: 0 // 0 数据未上传，1 数据已上传
         }
     },
@@ -310,7 +327,9 @@ export default {
                 this.gender = this.ruleForm.gender == '0' ? '男' : '女'
                 this.setBMI()
                 this.timeChange()
+                this.hisId = this.ruleForm.hisId
                 this.$refs['ruleForm'].resetFields()
+                this.getReservationList()
             }, error => {
                 Popup.hideLoading()
                 patientService.NetWorkFail()
@@ -319,20 +338,32 @@ export default {
         hisIdChange() {
             this.ruleForm.hisId = this.hisId
         },
+        // 获取已预约信息
+        getReservationList() {
+            if (!this.ruleForm.id) {
+                return false
+            }
+            let _data = {
+                reservationId: this.ruleForm.id
+            }
+            patientService.getReservationList(_data).then(data => {
+                data || (data = {})
+                if (data['code'] != commonService.STATUS_SUCCESS) {
+                    commonService.Warning(data['code'], data['msg'])
+                    return data
+                }
+                this.List = data.object.list
+            }, error => {
+                Popup.hideLoading()
+                patientService.NetWorkFail()
+            })
+        },
         // 预约时间弹窗确定选择
         dialogFun() {
             let isFull = 0
             let time = this.date + ' ' + this.reservationDate;
-            if (!Utils.size(this.typeSelect)) {
-                Popup.showToast.Warning('请选择检测项目')
-                return
-            }
-            if (!Utils.size(this.date)) {
-                Popup.showToast.Warning('请选择预约日期')
-                return
-            }
             if (Utils.size(this.array) > 0) {
-                if (this.i != '') {
+                if (this.i !== '') {
                     let list = this.array[this.i].list
                     for (let i = 0; i < list.length; i++) {
                         if (Utils.size(list[i]) > 0) {
@@ -355,9 +386,15 @@ export default {
         },
          // 查询预约时间段
         reservationInfoFun() {
-            if (!Utils.size(this.date)) {
+            if (!Utils.size(this.typeSelect)) {
+                Popup.showToast.Warning('请选择检测项目')
                 return
             }
+            if (!Utils.size(this.date)) {
+                Popup.showToast.Warning('请选择预约日期')
+                return
+            }
+            this.dialogFormVisible.isVisble = true
             let _data = {
                 applyDate: this.date,
                 checkProject: this.typeSelect || ''
@@ -379,8 +416,10 @@ export default {
         delReservationFun() {
             this.isReservation = 0
             this.reservationApplys = []
-            this.typeSelect = ''
-            this.date = ''
+            this.reservationDate = ''
+            this.i = ''
+            /* this.typeSelect = ''
+            this.date = '' */
             this.reservationArray = []
         },
         // 清空数据
@@ -405,6 +444,7 @@ export default {
                             quitSmoking: '',
                             remarks: ''
                         }
+                        this.List = {}
                         this.isReservation = 0
                         this.reservationApplys = []
                         this.typeSelect = ''
@@ -415,6 +455,9 @@ export default {
                         this.i = ''
                         this.hisId = ''
                         this.gender = ''
+                        this.calIndex = ''
+                        this.calDate = ''
+                        this.$refs.calendarRef.clearI()
                     }
                 })
             }
@@ -435,10 +478,6 @@ export default {
             } else {
                 this.age = 0
             }
-        },
-        // 打开新增预约弹窗
-        reservationFun() {
-            this.dialogFormVisible.isVisble = true
         },
         // 重新计算时间段数组
         timeFun () {
@@ -493,6 +532,7 @@ export default {
                 Popup.showToast.Warning('请选择预约项目和时间')
                 return
             }
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
             this.ruleForm.gender = this.gender == '男' ? '0' : '1'
             let _data = this.ruleForm
             _data.gender = this.gender == '男' ? '0' : '1'
@@ -508,6 +548,7 @@ export default {
                 this.isPrint = true
                 this.$refs.printRef.reservationApplyFun(this.printID);
                 this.isUpdate = 1
+                this.getReservationList()
             }, error => {
                 Popup.hideLoading()
                 patientService.NetWorkFail()
@@ -517,8 +558,31 @@ export default {
         closePrint() {
             this.isPrint = false
         },
+        // 打开打印页面
         showPrint() {
             this.isPrint = true
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
+        },
+        // 预约信息查看打印页面
+        readPrint(val) {
+            this.showPrint()
+            this.$refs.printRef.reservationApplyFun(val);
+        },
+        // 获取自组件日历点击的返回天数
+        calendarDate(val) {
+            this.date = val
+        },
+        // 获取自组件日历点击上月下月返回天数
+        calendarMonth(val) {
+            this.calDate = val
+            this.getCalendarDate(val)
+        },
+        // 获取日历列表
+        getCalendarDate(val) {
+            if (!Utils.size(this.typeSelect)) {
+                return
+            }
+            this.$refs.calendarRef.getDateNumberList(this.calDate, this.typeSelect)
         }
     }
 };
@@ -654,7 +718,15 @@ export default {
     background: #3394f5;
     color: #fff;
 }
-Menus{
-    width: 65px;
+.re-info b{
+    font-weight: 400;
+    display: inline-block;
+    width: 80px;
+}
+.re-info span{padding-left: 5px;}
+.re-scroll{
+    height: 70px; 
+    overflow: auto;
+    line-height: 1;
 }
 </style>

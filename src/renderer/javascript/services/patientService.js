@@ -85,6 +85,26 @@ class PatientService extends BaseService {
         return this.httpClientJson.post('api.reservationApply.getView', _config)
     }
 
+    /**
+     * 获取用户预约历史
+     * @param {*} config
+     */
+    getReservationList(config) {
+        config['pageSize'] = 10
+        config['currPage'] = 1
+        let _config = Utils.toJson(config)
+        return this.httpClientJson.post('api.reservationApply.pageList', _config)
+    }
+
+    /**
+     * 9.2.查询指定月份每天预约人数
+     * @param {*} config
+     */
+    getDateNumberList(config) {
+        let _config = Utils.toJson(config)
+        return this.httpClientJson.post('api.reservationApply.getDailyReservationApplyNumber', _config)
+    }
+
     /***
      * 增加、修改患者
      * @param config

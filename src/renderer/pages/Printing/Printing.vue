@@ -166,7 +166,6 @@ export default {
                 this.tableData = data.object
                 this.age = this.timeChange(this.tableData.birthday)
                 this.setBMI()
-                Popup.showToast.Success('提交成功,请打印报告！')
                 document.getElementById('div128').innerHTML = code128(this.tableData.reservationNumber, 'B');
             }, error => {
                 Popup.hideLoading()

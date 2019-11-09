@@ -9,7 +9,7 @@
     <el-row class="logo">
         <el-col :span="12">
             <img class="logo-img" />
-            <div class="title">格创肺功能</div>
+            <div class="title">预约补录系统</div>
         </el-col>
         <el-col :span="12">
         </el-col>
