@@ -37,14 +37,11 @@
                     </div>
                     <div v-else>
                         <!--今天-->
-                        <span v-if="item.m + 1 != currentMonth" class="other-month">
+                        <span v-if="item.m + 1 != currentMonth" style="color: #888">
                             <span class="date-tag">{{ item.d }}</span><span :class="{red:item.full}">-人</span>
                         </span>
                         <div v-else>
-                            <span v-if="item.y == new Date().getFullYear() && item.m == new Date().getMonth() && item.d == new Date().getDate()">
-                                <span class="date-tag active">{{ item.d }}</span><span :class="{red:item.full}">{{item.num}}人</span>
-                            </span>
-                            <span v-else>
+                            <span style="color: #888">
                                 <span class="date-tag">{{ item.d }}</span><span :class="{red:item.full}">{{item.num}}人</span>
                             </span>
                         </div>
