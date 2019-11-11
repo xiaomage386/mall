@@ -20,18 +20,34 @@
                 <li>日</li>
             </ul>
             <ul class="days">
-                <li :class="{blue:i===index}" @click="pick(item.day, index)" v-for="(item, index) in selfDays" :key="index">
-                    <!--今天-->
-                    <span v-if="item.m + 1 != currentMonth" class="other-month">
-                        <span class="date-tag">{{ item.d }}</span><span :class="{red:item.full}">{{item.num}}人</span>
-                    </span>
+                <li :class="{blue:i===index}" v-for="(item, index) in selfDays" :key="index">
+                    <div @click="pick(item.day, index)" v-if="item.y >= new Date().getFullYear() && item.m >= new Date().getMonth()">
+                        <!--今天-->
+                        <span v-if="item.m + 1 != currentMonth" class="other-month">
+                            <span class="date-tag">{{ item.d }}</span><span :class="{red:item.full}">-人</span>
+                        </span>
+                        <div v-else>
+                            <span v-if="item.y == new Date().getFullYear() && item.m == new Date().getMonth() && item.d == new Date().getDate()">
+                                <span class="date-tag active">{{ item.d }}</span><span :class="{red:item.full}">{{item.num}}人</span>
+                            </span>
+                            <span v-else>
+                                <span class="date-tag">{{ item.d }}</span><span :class="{red:item.full}">{{item.num}}人</span>
+                            </span>
+                        </div>
+                    </div>
                     <div v-else>
-                        <span v-if="item.y == new Date().getFullYear() && item.m == new Date().getMonth() && item.d == new Date().getDate()">
-                            <span class="date-tag active">{{ item.d }}</span><span :class="{red:item.full}">{{item.num}}人</span>
+                        <!--今天-->
+                        <span v-if="item.m + 1 != currentMonth" class="other-month">
+                            <span class="date-tag">{{ item.d }}</span><span :class="{red:item.full}">-人</span>
                         </span>
-                        <span v-else>
-                            <span class="date-tag">{{ item.d }}</span><span :class="{red:item.full}">{{item.num}}人</span>
-                        </span>
+                        <div v-else>
+                            <span v-if="item.y == new Date().getFullYear() && item.m == new Date().getMonth() && item.d == new Date().getDate()">
+                                <span class="date-tag active">{{ item.d }}</span><span :class="{red:item.full}">{{item.num}}人</span>
+                            </span>
+                            <span v-else>
+                                <span class="date-tag">{{ item.d }}</span><span :class="{red:item.full}">{{item.num}}人</span>
+                            </span>
+                        </div>
                     </div>
                 </li>
             </ul>
@@ -217,6 +233,9 @@ export default {
     text-transform: uppercase;
     letter-spacing: 3px;
     padding-top: 6px;
+}
+.month ul .arrow{
+    padding-top: 0;
 }
 .year-month {
     align-items: center;
