@@ -31,6 +31,7 @@
                                     type="date"
                                     value-format="yyyy-MM-dd"
                                     @change="timeChange"
+                                    :picker-options="pickerOptionsDate"
                                     placeholder="选择日期">
                                 </el-date-picker>
                             </el-form-item>
@@ -59,7 +60,7 @@
                             </el-form-item>
                             <div class="foot-btn">
                                 <el-button type="danger" @click="resetForm()">清空</el-button>
-                                <el-button type="primary" @click="showPrint()">打印</el-button>
+                                <el-button type="primary" @click="showPrintBtn()">打印</el-button>
                                 <el-button type="primary" @click="reservationSaveFun('ruleForm')">提交</el-button>
                             </div>
                         </el-col>
@@ -106,7 +107,7 @@
                                     <el-input v-model="checkAddress"></el-input>
                                 </el-form-item>
                                 <el-form-item label="检测项目">
-                                    <el-select v-model="typeSelect" placeholder="请选择检测项目" @change="getCalendarDate">
+                                    <el-select v-model="typeSelect" placeholder="请选择检测项目" @change="changeTypeSelect">
                                         <el-option label="常规肺功能" value="0"></el-option>
                                         <el-option label="激发试验" value="1"></el-option>
                                     </el-select>
@@ -119,10 +120,10 @@
                                 <el-form-item label="检测项目">
                                     <div class="type-item">
                                         <span v-if="typeSelect === ''">
-                                            <b>-</b><span> {{date}} {{reservationDate}}</span>
+                                            <b>-</b><span> {{date}} {{timeSlot}}</span>
                                         </span>
                                         <span v-else>
-                                            <b>{{typeSelect == 0 ? '常规肺功能' : '激发实验'}}</b><span> {{date}} {{reservationDate}}</span>
+                                            <b>{{typeSelect == 0 ? '常规肺功能' : '激发实验'}}</b><span> {{date}} {{timeSlot}}</span>
                                         </span>
                                     </div>
                                     <!-- <div v-if="isReservation">
@@ -260,6 +261,11 @@ export default {
             List: {}, // 已预约信息
             BMI: '', // bmi
             age: '', // 年龄
+            pickerOptionsDate: {
+                disabledDate (time) {
+                    return time.getTime() > new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1;
+                }
+            }, // 限制日期
             checkAddress: '', // 检测地址
             typeSelect: '', // 检测项目
             date: '', // 检测时间
@@ -273,6 +279,7 @@ export default {
             isPrint: false, // 报告页还是打印页
             calDate: '', // 上传给日历的天数
             calIndex: '', // 点击日历变色
+            timeSlot: '', // 显示的时间段数据，不需要上传
             isUpdate: 0 // 0 数据未上传，1 数据已上传
         }
     },
@@ -446,11 +453,11 @@ export default {
             });
             if (Utils.size(this.typeSelect) == 0) {
                 Popup.showToast.Warning('请选择预约项目')
-                return
+                return false
             }
-            if (Utils.size(this.date) == 0 && Utils.size(this.reservationDate) == 0) {
+            if (Utils.size(this.date) == 0 || Utils.size(this.reservationDate) == 0) {
                 Popup.showToast.Warning('请选择预约时间')
-                return
+                return false
             }
             document.body.scrollTop = document.documentElement.scrollTop = 0;
             this.ruleForm.gender = this.gender == '男' ? '0' : '1'
@@ -465,12 +472,24 @@ export default {
                 }
                 Popup.showToast.Success('提交成功！')
                 this.printID = data.object.applyId
-                this.isPrint = true
                 this.$refs.printRef.reservationApplyFun(this.printID);
                 this.isUpdate = 1
                 this.getReservationList()
                 localStorage.set(HOSPITAL, this.checkAddress)
-                this.$refs.calendarRef.getDateNumberList(this.date)
+                let date = this.date
+                this.$refs.calendarRef.getDateNumberList(new Date(date).setDate(1))
+                let typeSelect = this.typeSelect == 0 ? '常规肺功能' : '激发实验'
+                Popup.confirm(`是否打印数据？ ` + typeSelect + ' ' + this.date + ' ' + this.timeSlot).then(flag => {
+                    if (flag) {
+                        this.isPrint = true
+                    }
+                })
+                // 清除预约时间段（防止重复提交）
+                this.delReservationFun()
+                this.date = ''
+                this.typeSelect = ''
+                this.calIndex = ''
+                this.timeSlot = ''
             }, error => {
                 Popup.hideLoading()
                 patientService.NetWorkFail()
@@ -478,7 +497,9 @@ export default {
         },
         // 清空数据
         resetForm() {
-            if (this.isUpdate === 0) {
+            this.isUpdate = 0
+            this.clearInfo()
+            /* if (this.isUpdate === 0) {
                 Popup.confirm(`预约数据未提交，是否确定清除数据？`).then(flag => {
                     if (flag) {
                         this.clearInfo()
@@ -486,7 +507,7 @@ export default {
                 })
             } else {
                 this.clearInfo()
-            }
+            } */
         },
         clearInfo() {
             this.$refs.ruleForm.resetFields();
@@ -521,6 +542,7 @@ export default {
             this.calDate = ''
             this.$refs.calendarRef.clearI()
             this.focusHisId()
+            this.timeSlot = ''
         },
         // ID input 框获取焦点
         focusHisId() {
@@ -541,6 +563,13 @@ export default {
             this.isPrint = true
             document.body.scrollTop = document.documentElement.scrollTop = 0;
         },
+        showPrintBtn() {
+            if (this.isUpdate) {
+                this.showPrint()
+            } else {
+                Popup.showToast.Warning('请先提交数据再进行打印！')
+            }
+        },
         // 预约信息查看打印页面
         readPrint(val) {
             this.showPrint()
@@ -554,15 +583,14 @@ export default {
         // 获取自组件日历点击上月下月返回天数
         calendarMonth(val) {
             this.calDate = val
-            this.getCalendarDate(val)
+            this.changeTypeSelect(val)
         },
-        // 获取日历列表
-        getCalendarDate(val) {
+        // 切换预约项目
+        changeTypeSelect(val) {
             if (this.hisId === '') {
                 this.focusHisId()
             }
             this.delReservationFun()
-            this.$refs.calendarRef.getDateNumberList(this.calDate)
         },
         // 计算 BMI
         setBMI() {
@@ -617,6 +645,7 @@ export default {
         },
         // 选择时间段同时变色
         timeSlotFun(val) {
+            this.timeSlot = val.timeSlot
             this.i = val.index
             this.reservationDate = val.time
         }

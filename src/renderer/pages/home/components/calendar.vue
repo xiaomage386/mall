@@ -21,28 +21,27 @@
             </ul>
             <ul class="days">
                 <li :class="{blue:i===index}" v-for="(item, index) in selfDays" :key="index">
-                    <div @click="pick(item.day, index)" v-if="item.y >= new Date().getFullYear() && item.m >= new Date().getMonth()">
-                        <!--今天-->
+                    <!-- <div v-if="item.y >= new Date().getFullYear() && item.m >= new Date().getMonth()" @click="pick(item.day, index)"> -->
+                    <div v-if="item.str >= today" @click="pick(item.day, index)">
                         <span v-if="item.m + 1 != currentMonth" class="other-month">
-                            <span class="date-tag">{{ item.d }}</span><span :class="{red:item.full}">-人</span>
+                            <span class="date-tag">{{item.d}}</span><span :class="{red:item.full}">-人</span>
                         </span>
                         <div v-else>
                             <span v-if="item.y == new Date().getFullYear() && item.m == new Date().getMonth() && item.d == new Date().getDate()">
-                                <span class="date-tag active">{{ item.d }}</span><span :class="{red:item.full}">{{item.num}}人</span>
+                                <span class="date-tag active">{{item.d}}</span><span :class="{red:item.full}">{{item.num}}人</span>
                             </span>
                             <span v-else>
-                                <span class="date-tag">{{ item.d }}</span><span :class="{red:item.full}">{{item.num}}人</span>
+                                <span class="date-tag">{{item.d}}</span><span :class="{red:item.full}">{{item.num}}人</span>
                             </span>
                         </div>
                     </div>
                     <div v-else>
-                        <!--今天-->
-                        <span v-if="item.m + 1 != currentMonth" style="color: #888">
-                            <span class="date-tag">{{ item.d }}</span><span :class="{red:item.full}">-人</span>
+                        <span v-if="item.m + 1 != currentMonth" class="other-month">
+                            <span class="date-tag">{{item.d}}</span><span :class="{red:item.full}">-人</span>
                         </span>
                         <div v-else>
-                            <span style="color: #888">
-                                <span class="date-tag">{{ item.d }}</span><span :class="{red:item.full}">{{item.num}}人</span>
+                            <span style="color: #666">
+                                <span class="date-tag">{{item.d}}</span><span :class="{red:item.full}">{{item.num}}人</span>
                             </span>
                         </div>
                     </div>
@@ -70,19 +69,21 @@ export default {
             days: [],
             selfDays: [],
             dataArr: [],
-            i: this.calIndex
+            i: this.calIndex,
+            today: ''
         }
     },
     created() {
-        this.initData(null)
         let date = new Date()
-        this.getDateNumberList(date)
+        this.today = this.formatStringTime(this.formatDate(date.getFullYear(), date.getMonth() + 1, date.getDate()))
+        this.initData(this.formatDate(date.getFullYear(), date.getMonth() + 1, 1))
+        this.getDateNumberList(this.formatDate(date.getFullYear(), date.getMonth() + 1, 1))
     },
     methods: {
         // 获取预约人数
         getDateNumberList(date) {
             let _data = {
-                applyDate: date
+                applyDate: this.formatDateFun(date)
             }
             patientService.getDateNumberList(_data).then(data => {
                 data || (data = {})
@@ -123,9 +124,9 @@ export default {
                 let day = this.formatDateFun(d)
                 let num = this.getNum(day)
                 if (num.length > 0) {
-                    this.selfDays.push({'day': day, 'num': num[0].number, 'y': d.getFullYear(), 'm': d.getMonth(), 'd': d.getDate()})
+                    this.selfDays.push({'day': day, 'num': num[0].number, 'y': d.getFullYear(), 'm': d.getMonth(), 'd': d.getDate(), 'str': this.formatStringTime(day)})
                 } else {
-                    this.selfDays.push({'day': day, 'num': '0', 'y': d.getFullYear(), 'm': d.getMonth(), 'd': d.getDate()})
+                    this.selfDays.push({'day': day, 'num': '0', 'y': d.getFullYear(), 'm': d.getMonth(), 'd': d.getDate(), 'str': this.formatStringTime(day)})
                 }
             }
             for (let i = 1; i <= 35 - this.currentWeek; i++) {
@@ -135,9 +136,9 @@ export default {
                 let day = this.formatDateFun(d)
                 let num = this.getNum(day)
                 if (num.length > 0) {
-                    this.selfDays.push({'day': day, 'num': num[0].number, 'y': d.getFullYear(), 'm': d.getMonth(), 'd': d.getDate()})
+                    this.selfDays.push({'day': day, 'num': num[0].number, 'y': d.getFullYear(), 'm': d.getMonth(), 'd': d.getDate(), 'str': this.formatStringTime(day)})
                 } else {
-                    this.selfDays.push({'day': day, 'num': '0', 'y': d.getFullYear(), 'm': d.getMonth(), 'd': d.getDate()})
+                    this.selfDays.push({'day': day, 'num': '0', 'y': d.getFullYear(), 'm': d.getMonth(), 'd': d.getDate(), 'str': this.formatStringTime(day)})
                 }
             }
         },
@@ -156,6 +157,7 @@ export default {
             let d = new Date(this.formatDate(year, month, 1));
             d.setDate(0);
             this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
+            this.getDateNumberList(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1))
             this.$emit('calendarMonth', this.formatDate(d.getFullYear(), d.getMonth() + 1, 1))
         },
         // 下个月
@@ -164,6 +166,7 @@ export default {
             let d = new Date(this.formatDate(year, month, 1));
             d.setDate(35);
             this.initData(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1));
+            this.getDateNumberList(this.formatDate(d.getFullYear(), d.getMonth() + 1, 1))
             this.$emit('calendarMonth', this.formatDate(d.getFullYear(), d.getMonth() + 1, 1))
         },
         pickYear: function(year, month) {
@@ -203,6 +206,10 @@ export default {
         },
         clearI: function() {
             this.i = ''
+        },
+        formatStringTime: function (stringTime) {
+            stringTime = new Date(Date.parse(stringTime.replace(/-/g, '/')));
+            return stringTime.getTime();
         }
     }
 }
@@ -222,17 +229,13 @@ export default {
     padding: 0;
     display: flex;
     justify-content: space-between;
-    line-height: 30px;
+    line-height: 36px;
 }
 .month ul li {
     color: white;
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 3px;
-    padding-top: 6px;
-}
-.month ul .arrow{
-    padding-top: 0;
 }
 .year-month {
     align-items: center;
