@@ -338,7 +338,7 @@ export default {
     methods: {
         // 获取患者数据
         getHisInfoFun(data) {
-            let hisId = this.replace(this.hisId)
+            let hisId = this.replaceFun(this.hisId)
             if (Utils.size(hisId) < 1) {
                 return false
             } else {
@@ -366,7 +366,7 @@ export default {
             }
         },
         // hisid过滤
-        replace(val) {
+        replaceFun(val) {
             return val.replace(/[^a-zA-Z0-9]+/g, '');
         },
         hisIdChange() {
