@@ -367,7 +367,7 @@ export default {
         },
         // hisid过滤
         replace(val) {
-            return val.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '');
+            return val.replace(/[^a-zA-Z0-9]+/g, '');
         },
         hisIdChange() {
             this.ruleForm.hisId = this.hisId
