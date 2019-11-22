@@ -338,11 +338,12 @@ export default {
     methods: {
         // 获取患者数据
         getHisInfoFun(data) {
-            if (Utils.size(this.hisId) < 3) {
+            let hisId = this.replace(this.hisId)
+            if (Utils.size(hisId) < 1) {
                 return false
             } else {
                 let _data = {
-                    hisId: this.hisId
+                    hisId: hisId
                 }
                 Popup.showToast.Success('扫描成功，正在获取数据')
                 patientService.getHisInfo(_data).then(data => {
@@ -363,6 +364,10 @@ export default {
                     patientService.NetWorkFail()
                 })
             }
+        },
+        // hisid过滤
+        replace(val) {
+            return val.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '');
         },
         hisIdChange() {
             this.ruleForm.hisId = this.hisId
