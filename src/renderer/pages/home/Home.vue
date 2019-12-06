@@ -284,13 +284,17 @@ export default {
         }
     },
     mounted() {
-        let _this = this;
         // 如果 hisid 为空，则获取焦点
+        let _this = this;
         document.getElementById('main').onclick = function() {
-            _this.focusHisId()
+            if (!Utils.size(_this.hisId)) {
+                _this.focusHisId()
+            }
         }
         document.getElementById('main').onkeydown = function() {
-            _this.focusHisId()
+            if (!Utils.size(_this.hisId)) {
+                _this.focusHisId()
+            }
         }
         // 扫描枪
         /* document.onkeydown = function(e){

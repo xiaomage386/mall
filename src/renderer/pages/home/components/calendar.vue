@@ -222,7 +222,7 @@ export default {
 }
 .month {
     width: 100%;
-    background: #00B8EC;
+    background: #3394f5;
 }
 .month ul {
     margin: 0;
@@ -257,7 +257,7 @@ export default {
     background: rgba(100, 2, 12, 0.1);
 }
 .weekdays {
-    background-color: #00B8EC;
+    background-color: #3394f5;
     display: flex;
     flex-wrap: wrap;
     color: #FFFFFF;
@@ -299,7 +299,7 @@ export default {
     left:-1px;
     top: -1px;
     z-index: 1;
-    border: 1px solid #00B8EC;
+    border: 1px solid #3394f5;
 }
 .days li .date-tag{
     position: absolute;
@@ -311,7 +311,7 @@ export default {
 }
 .days li .active {
     border-radius: 50%;
-    background: #00B8EC;
+    background: #3394f5;
     color: #fff;
 }
 .days li .other-month {
