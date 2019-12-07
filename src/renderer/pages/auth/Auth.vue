@@ -7,10 +7,13 @@
                      :model="sevriceForm"
                      size="small"
                      :validate-on-rule-change="false">
-                <el-row>
+                <!-- <el-row>
                     <el-radio v-model="radio" :label='1'>本地服务器</el-radio>
                     <el-radio v-model="radio" :label='2'>远程服务器</el-radio>
-                </el-row>
+                </el-row> -->
+                <el-form-item class="ip-input">
+                    <el-input placeholder="请填写IP地址，例：127.0.0.1" v-model="form.IP"></el-input>
+                </el-form-item>
                 <div class="btn-list text-right">
                     <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
                     <el-button type="primary" size="mini"
@@ -28,11 +31,11 @@
                     <i slot="suffix"
                        class="icon-btn icon-close-white winNoDrag"
                        @click="Close()"></i>
-                    <!-- <div class="service"
+                    <div class="service"
                          @click="configService">
                         <i class="icon icon-setting"></i>
                         服务配置
-                    </div> -->
+                    </div>
                 </div>
                 <div class="window-bar winDrag"></div>
                 <div class="title">肺功能预约补录系统</div>
@@ -85,6 +88,7 @@ const currentWindow = remote.getCurrentWindow();
 const COOKIE_CLAUSE = APP_CONFIG['NAME'] + '_CLAUSE';
 const SERVICE_TYPE = APP_CONFIG['NAME'] + '_SERVICE_TYPE';
 const LOGIN_NAME = APP_CONFIG['NAME'] + '_LOGIN_NAME';
+const LOGIN_URL = APP_CONFIG['NAME'] + '_LOGIN_URL';
 // 原生窗口信息
 const WIN_CONFIG = REMOTE_CONFIG['BrowserWindow'];
 export default {
@@ -104,7 +108,8 @@ export default {
             sevriceForm: {},
             form: {
                 user: '',
-                password: ''
+                password: '',
+                IP: ''
             },
             formRules: {
                 user: [
@@ -123,6 +128,9 @@ export default {
         this.isLoginCache = localStorage.getObject(COOKIE_CLAUSE) === true ? localStorage.getObject(COOKIE_CLAUSE) : false
         if (localStorage.get(LOGIN_NAME)){
             this.form.user = localStorage.get(LOGIN_NAME)
+        }
+        if (localStorage.get(LOGIN_URL)){
+            this.form.IP = localStorage.get(LOGIN_URL)
         }
     },
     methods: {
@@ -197,12 +205,12 @@ export default {
             this.dialogFormVisible = true
         },
         // 切换服务器
-        // SERVICE_TYPE 1：本地服务器 2：远程服务器
         sevriceSubmitForm() {
-            localStorage.set(SERVICE_TYPE, this.radio);
+            localStorage.set(LOGIN_URL, this.form.IP)
+            // localStorage.set(SERVICE_TYPE, this.radio);
             this.dialogFormVisible = false
             this.loginDisabled = true
-            Popup.showToast.Success('切换服务器成功，即将重启！', {showClose: true}).then(data => {
+            Popup.showToast.Success('切换IP地址成功，即将重启！', {showClose: true}).then(data => {
                 location.reload()
             })
         },

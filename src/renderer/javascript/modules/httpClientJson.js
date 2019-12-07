@@ -24,6 +24,13 @@ const COOKIE_UCENTER = APP_CONFIG['NAME'] + '_USER';
 // URL 路径后缀
 const URL_EXT = HTTP_CLIENT['URL_EXT'] || '';
 
+// 获取 URL 访问路径
+const LOGIN_URL = APP_CONFIG['NAME'] + '_LOGIN_URL';
+let url = ''
+if (localStorage.get(LOGIN_URL)) {
+	url = localStorage.get(LOGIN_URL)
+}
+
 /**
  * 模拟$q Promise
  * @param Fn
@@ -80,6 +87,13 @@ var callAuthsTimeout = Utils.debounce(function () {
 
 // 此句非常重要，配合服务器接口配置信息
 let VAR_SERVER_URL = HTTP_CLIENT.VAR_SERVER_URL = HTTP_CLIENT.SERVER_URL ? HTTP_CLIENT.SERVER_URL : (HTTP_CLIENT.SERVER + HTTP_CLIENT.SERVER_RUNTIME || '');
+if (Utils.size(url) > 0) {
+	if (url.indexOf('http') != -1) {
+		VAR_SERVER_URL = (url + '/' + HTTP_CLIENT.RUNTIME || '');
+	} else {
+		VAR_SERVER_URL = ('http://' + url + '/' + HTTP_CLIENT.RUNTIME || '');
+	}
+}
 
 /**
  * url拼接方法
