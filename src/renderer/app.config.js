@@ -19,17 +19,11 @@ const SERVICE_TYPE = CONFIG['NAME'] + '_SERVICE_TYPE';
 CONFIG['DEPLOY'] = true;
 CONFIG['DEBUG'] = !CONFIG['DEPLOY'];
 
-// SERVER配置
-// SERVICE_TYPE 1：本地服务器 2：远程服务器
-// CONFIG['LOCAL_ADDRESS'] = 'http://localhost:10241/';
-// 正式环境
-// CONFIG['REMOTE_ADDRESS'] = 'https://www.huxijia.cn/';
-// 测试环境
-CONFIG['LOCAL_ADDRESS'] = 'http://127.0.0.1/';
+/* CONFIG['LOCAL_ADDRESS'] = 'http://127.0.0.1/';
 CONFIG['REMOTE_ADDRESS'] = 'http://www.creaker.net/';
-
+ */
 CONFIG['HOST'] = localStorage.getObject(SERVICE_TYPE) == 1 ? CONFIG['LOCAL_ADDRESS'] : CONFIG['REMOTE_ADDRESS'];
-CONFIG['HOST'] = 'http://127.0.0.1:10241/';
+CONFIG['HOST'] = 'http://192.168.3.84:10241/';
 CONFIG['DOMAIN'] = 'creaker.net';
 CONFIG['APP_RUNTIME'] = 'webapp'
 CONFIG['RUNTIME'] = 'creaker';
@@ -92,7 +86,7 @@ CONFIG['HTTP_CLIENT'] = {
     axios: {
         method: 'GET',
         baseURL: CONFIG['SERVER'],
-        timeout: 60000,
+        timeout: 80000,
         headers: {
 	        'Content-Type': 'application/x-www-form-urlencoded',
             common: {

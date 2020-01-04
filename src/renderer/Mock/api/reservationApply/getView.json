@@ -1,0 +1,27 @@
+
+{
+    "msg": "success",
+    "code": 0,
+    "object": {
+      "applyDate": "2019-11-08",
+      "checkProject": "1",
+      "reservationNumber": "1573198842718",
+      "hospitalName": "广州医科大学附属第一医院",
+      "id": 43,
+      "name": "沈昊实",
+      "hisId": "001201911050001",
+      "clinicNum": "00345",
+      "gender": "0",
+      "birthday": "1973-04-17",
+      "height": "171",
+      "weight": "68",
+      "mobile": "13934282424",
+      "job": "技术工作者",
+      "address": "湖北黄冈",
+      "medicalHistory": "正常",
+      "smokingHistory": "20",
+      "smokingVolume": "10",
+      "quitSmoking": "没有",
+      "remarks": "加强锻炼"
+    }
+  }

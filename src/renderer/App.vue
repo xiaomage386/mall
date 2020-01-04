@@ -36,7 +36,7 @@ export default {
             commonService.Authorize(timeoutText);
         });
         if (commonService.updateToken()) {
-            commonService.checkLogin();
+            // commonService.checkLogin();
             console.log('checkLogin')
         } else if (!isInAuth) {
             console.log('isInAuth')

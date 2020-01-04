@@ -27,7 +27,8 @@
             <div class="title">
                 <div class="barcode" id="div128"></div>
                 <h3 v-text="tableData.hospitalName">-</h3>
-                <span>{{tableData.checkProject == 0 ? '常规肺功能' : '激发试验'}}检查单</span>
+                <!-- <span>{{tableData.checkProject == 0 ? '常规肺功能' : '激发试验'}}检查单</span> -->
+                <span v-for="item in reportTypeList" v-if="item.type == tableData.checkProject">{{item.name}}</span>
                 <span class="time">打印日期： {{nowTime}}</span>
             </div>
             <div class="print-table">
@@ -38,7 +39,7 @@
                     <tr><th>出生日期：</th><td v-text="tableData.birthday"></td><th>年龄：</th><td><span v-text="age"></span> 岁</td><th>电话：</th><td v-text="tableData.mobile"></td></tr>
                     <tr><th>职业：</th><td v-text="tableData.job"></td><th>吸烟史：</th><td><span v-text="tableData.smokingHistory"></span> 年</td><th>吸烟量：</th><td><span v-text="tableData.smokingVolume"></span> 支/天</td></tr>
                     <tr><th>已戒烟：</th><td><span v-text="tableData.quitSmoking"></span> 年</td><th>既往史：</th><td>{{tableData.medicalHistory}}</td><th>检查时间：</th><td v-text="tableData.applyDate"></td></tr>
-                    <tr><th>检查项目：</th><td>{{tableData.checkProject == 0 ? '常规肺功能' : '激发试验'}}</td><th>籍贯：</th><td colspan="3" v-text="tableData.address"></td></tr>
+                    <tr><th>检查项目：</th><td><span v-for="item in reportTypeList" v-if="item.type == tableData.checkProject">{{item.name}}</span></td><th>籍贯：</th><td colspan="3" v-text="tableData.address"></td></tr>
                     <tr><th>备注：</th><td colspan="5"><span>{{tableData.remarks}}</span></td></tr>
                     <tr><td colspan="6" style="height: 750px;"></td></tr>
                 </table>
@@ -113,7 +114,8 @@ import Utils from '@modules/Utils'
 export default {
     name: 'Printing',
     props: {
-        printID: Number
+        printID: Number,
+        reportTypeList: Array
     },
     data() {
         return {

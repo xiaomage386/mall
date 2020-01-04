@@ -105,98 +105,25 @@ class PatientService extends BaseService {
         return this.httpClientJson.post('api.reservationApply.getDailyReservationApplyNumber', _config)
     }
 
-    /***
-     * 增加、修改患者
-     * @param config
-     * @constructor
+    /**
+     * 获取配置文件输入的是申请号还是hisId
      */
-    setPatient(config = {}) {
-        let _config = {
-            addOrUpdateJson: Utils.toJson(config)
-        }
-        return this.httpClient.post('api.client.patient.addOrUpdatePatient', _config)
+    getAppointment(config) {
+        return this.httpClientJson.post('api.reservation.appointment', config)
     }
 
-    /***
-     * 删除患者
-     * @param config
-     * @constructor
-     */
-    delPatient(id) {
-        let _config = Utils.toJson({
-            patientIds: id
-        })
-        return this.httpClient.post('api.client.patient.deletePatient', _config)
+    /**
+     * 获取身高体重
+=    */
+    getMeasure(config) {
+        return this.httpClientJson.post('api.reservation.measure', config)
     }
 
-    /***
-     * 患者测试列表（FVC报告）
-     * @param config
-     * @constructor
+    /**
+     * 获取报告类型
      */
-    getFVCReports(config = {}) {
-        config['pageSize'] = config['pageSize'] || this.NORMAL_LIMIT
-        config['pageNumber'] = config['pageNumber'] || this.NORMAL_PAGE
-        let _config = {
-            conditionJson: Utils.toJson(config)
-        }
-        return this.httpClient.post('api.client.fvcReport.findFVCReportPage', _config)
-    }
-
-    /***
-     * 获取 svc 潮气基线
-     * @param
-     */
-    getSvcVtBaseline(config = {}) {
-        return this.httpClientJson.post('api.client.svcActual.getSvcVtBaseline', config)
-    }
-
-    /***
-     * 上传MVV患者测试数据
-     * @param config [obj]
-     * @constructor
-     */
-    addMVVTest(config = {}) {
-        let _config = {
-            uploadData: Utils.toJson(config)
-        }
-        return this.httpClient.post('api.client.mvvActual.addMVVActual', _config)
-    }
-
-    /***
-     * 上传SVC患者测试数据
-     * @param config [obj]
-     * @constructor
-     */
-    addSVCTest(config = {}) {
-        let _config = {
-            uploadData: Utils.toJson(config)
-        }
-        return this.httpClient.post('api.client.svcActual.addSVCActual', _config)
-    }
-
-    /***
-     * 上传FVC患者测试报告(FVC报告)
-     * @param config [obj]
-     * @constructor
-     */
-    buildFVCReport(id, templateCode) {
-        let _config = {
-            gradeId: id,
-            reportType: templateCode
-        }
-        return this.httpClient.post('api.client.fvcReport.buildFVCReport', _config)
-    }
-
-    /***
-     * 上传FVC患者测试报告(FVC报告)
-     * @param patientId [id]
-     * @constructor
-     */
-    findPreValueCoordinate(patientId) {
-        return this.httpClient.post('api.client.medicationGrade.findPreValueCoordinate', {
-            patientId: patientId
-        })
+    reportType(config = {}) {
+        return this.httpClientJson.post('api.report.reportType', config)
     }
 
     /***

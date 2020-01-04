@@ -115,7 +115,7 @@ function startMain () {
 
 function startElectron () {
   var args = [
-    '--inspect=6060',
+    '--inspect=6062',
     path.join(__dirname, '../dist/electron/main.js')
   ]
 

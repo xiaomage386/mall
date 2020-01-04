@@ -1,0 +1,8 @@
+{
+    "code": 0,
+    "msg": "success",
+    "object": [
+        {"date": "2020-01-04", "number": 12, "full": false}, 
+        {"date": "2020-01-02", "number": 5, "full": false}
+    ]
+}

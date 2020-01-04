@@ -10,9 +10,18 @@
                     <el-row>
                         <el-col :span="7">
                             <div class="title">填写基本信息</div>
-                            <el-form-item label="ID" prop="hisId">
+                            <div class="el-form-item is-required" :class="hisIdError ? 'is-error' : ''"> <!-- is-error -->
+                                <label for="hisId" class="el-form-item__label" style="width: 100px;">ID</label>
+                                <div class="el-form-item__content" style="margin-left: 100px;">
+                                    <div class="el-input">
+                                        <input type="text" v-model="hisId" autocomplete="off" id="hisIdInput" class="el-input__inner" @blur="hisIdChange" @keyup.enter="getHisInfoFun">
+                                    </div>
+                                    <div v-if="hisIdError" class="el-form-item__error">请输入ID</div>
+                                </div>
+                            </div>
+                            <!-- <el-form-item label="ID" prop="hisId">
                                 <el-input v-model="hisId" id="hisIdInput" @keyup.enter.native="getHisInfoFun" @input="hisIdChange"></el-input>
-                            </el-form-item>
+                            </el-form-item> -->
                             <el-form-item label="住院号">
                                 <el-input v-model="ruleForm.clinicNum"></el-input>
                             </el-form-item>
@@ -20,9 +29,9 @@
                                 <el-input v-model="ruleForm.name"></el-input>
                             </el-form-item>
                             <el-form-item label="性别" prop="gender">
-                                <el-radio-group v-model="gender">
-                                    <el-radio label="男">男</el-radio>
-                                    <el-radio label="女">女</el-radio>
+                                <el-radio-group v-model="ruleForm.gender">
+                                    <el-radio label="0">男</el-radio>
+                                    <el-radio label="1">女</el-radio>
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item label="出生年月" prop="birthday">
@@ -41,17 +50,17 @@
                                 </el-col>
                                 <el-col :span="12">岁</el-col>
                             </el-form-item>
-                            <el-form-item label="体重" prop="weight">
-                                <el-col :span="12">
-                                    <el-input v-model="ruleForm.weight" @blur="setBMI"></el-input>
-                                </el-col>
-                                <el-col :span="12">kg</el-col>
-                            </el-form-item>
                             <el-form-item label="身高" prop="height">
                                 <el-col :span="12">
-                                    <el-input v-model="ruleForm.height" @blur="setBMI"></el-input>
+                                    <el-input v-model="ruleForm.height"></el-input>
                                 </el-col>
-                                <el-col :span="12">cm</el-col>
+                                <el-col :span="12">cm <el-button :disabled="!weightBtn.btnClick" v-show="weightBtn.btnShow" @click="measureFunClick" size="small">测量</el-button></el-col>
+                            </el-form-item>
+                            <el-form-item label="体重" prop="weight">
+                                <el-col :span="12">
+                                    <el-input v-model="ruleForm.weight"></el-input>
+                                </el-col>
+                                <el-col :span="12">kg</el-col>
                             </el-form-item>
                             <el-form-item label="BMI">
                                 <el-col :span="12">
@@ -107,9 +116,8 @@
                                     <el-input v-model="checkAddress"></el-input>
                                 </el-form-item>
                                 <el-form-item label="检测项目">
-                                    <el-select v-model="typeSelect" placeholder="请选择检测项目" @change="changeTypeSelect">
-                                        <el-option label="常规肺功能" value="0"></el-option>
-                                        <el-option label="激发试验" value="1"></el-option>
+                                    <el-select placeholder="" v-model="typeSelect" @change="changeTypeSelect">
+                                        <el-option :label="item.name" :value="item.type" v-for="(item, index) in reportTypeList" :key="index"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
@@ -119,31 +127,16 @@
                                 </el-form-item>
                                 <el-form-item label="检测项目">
                                     <div class="type-item">
-                                        <span v-if="typeSelect === ''">
-                                            <b>-</b><span> {{date}} {{timeSlot}}</span>
-                                        </span>
-                                        <span v-else>
-                                            <b>{{typeSelect == 0 ? '常规肺功能' : '激发实验'}}</b><span> {{date}} {{timeSlot}}</span>
+                                        <span>
+                                            <b v-for="item in reportTypeList" v-if="item.type == typeSelect">{{item.name}}</b><span> {{date}} {{timeSlot}}</span>
                                         </span>
                                     </div>
-                                    <!-- <div v-if="isReservation">
-                                        <div class="type-item" v-for="(item, index) in reservationApplys" :key="index">
-                                            <b>{{item.checkProject == 0 ? '常规肺功能' : '激发实验'}}</b>
-                                            <span> {{item.applyDate}}</span>
-                                        </div>
-                                    </div>
-                                    <div v-else>
-                                        <div class="type-item">
-                                            <b>-</b><span> -</span>
-                                        </div>
-                                    </div> -->
-                                    <!-- <el-button v-else @click="reservationInfoFun" class="type-btn" type="primary">+选择时间段</el-button> -->
                                 </el-form-item>
                             </el-col>
                             <el-col :span="24">
                                 <el-form-item label="预约信息" class="re-scroll" v-if="List.length > 0">
                                     <div class="box">
-                                        <div class="re-info" v-for="(item, index) in List" :key="index"><b>{{item.checkProject == 0 ? '常规肺功能' : '激发实验'}}</b> {{item.applyDate}} <span @click="readPrint(item.id)">查看</span></div>
+                                        <div class="re-info" v-for="(item, index) in List" :key="index"><b v-for="item in reportTypeList" v-if="item.type == typeSelect">{{item.name}}</b> {{item.applyDate}} <span @click="readPrint(item.id)">查看</span></div>
                                     </div>
                                 </el-form-item>
                             </el-col>
@@ -151,6 +144,7 @@
                     </el-row>
                 </el-form>
                 <el-dialog :visible.sync="dialogFormVisible.isVisble"
+                    :before-close="dialogCloseFun"
                     width="630px"
                     title="预约时间">
                     <el-row>
@@ -179,13 +173,13 @@
                         </el-row>
                     </div>
                     <div class="btn-list">
-                        <el-button @click="dialogFormVisible.isVisble = false">取 消</el-button>
+                        <el-button @click="dialogCloseFun">取 消</el-button>
                         <el-button type="primary" @click="dialogFun">确定</el-button>
                     </div>
                 </el-dialog>
             </div>
         </div>
-        <printing ref="printRef" v-show="isPrint" :printID="printID" @close="closePrint"></printing>
+        <printing ref="printRef" v-show="isPrint" :printID="printID" :reportTypeList="reportTypeList" @close="closePrint"></printing>
     </div>
 </template>
 <script>
@@ -211,6 +205,7 @@ var lastTime = null;
 var nextTime = null;
 var lastCode = null;
 var nextCode = null;
+let today = Utils.formatTime(Utils.getTime())
 export default {
     name: 'Home',
     components: {Printing, Menus, calendar},
@@ -221,9 +216,9 @@ export default {
                 isVisble: false
             },
             hisId: '',
+            hisIdError: false, // 判断 ID 输入框是否为空
             gender: '', // 性别
             ruleForm: {
-                hisId: '',
                 clinicNum: '',
                 name: '',
                 gender: '', // 0-男 1-女
@@ -259,15 +254,14 @@ export default {
                 ]
             },
             List: {}, // 已预约信息
-            BMI: '', // bmi
+            // BMI: '', // bmi
             age: '', // 年龄
-            pickerOptionsDate: {
+            pickerOptionsDate: {// 限制日期
                 disabledDate (time) {
                     return time.getTime() > new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1;
                 }
-            }, // 限制日期
+            },
             checkAddress: '', // 检测地址
-            typeSelect: '', // 检测项目
             date: '', // 检测时间
             array: [], // 预约时间段
             reservationArray: [], // 预约时间段重组数组
@@ -280,7 +274,14 @@ export default {
             calDate: '', // 上传给日历的天数
             calIndex: '', // 点击日历变色
             timeSlot: '', // 显示的时间段数据，不需要上传
-            isUpdate: 0 // 0 数据未上传，1 数据已上传
+            isUpdate: 0, // 0 数据未上传，1 数据已上传
+            appointment: '', // 0 是申请号，1 是 hisid
+            weightBtn: { // 身高测量的按钮
+                btnClick: false,
+                btnShow: false
+            },
+            typeSelect: '1', // 检测项目
+            reportTypeList: [] // 报告类型列表
         }
     },
     mounted() {
@@ -296,52 +297,53 @@ export default {
                 _this.focusHisId()
             }
         }
-        // 扫描枪
-        /* document.onkeydown = function(e){
-            let code = ''
-            // 兼容性处理
-            if (window.event) {
-                nextCode = e.keyCode
-            } else if (e.which) {
-                nextCode = e.which
-            }
-            // 获取当前时间
-            nextTime = new Date().getTime();
-            if (e.keyCode == 13) {
-                if (Utils.size(_this.hisId) > 0) {
-                } else if (Utils.size(keycode) > 0) {
-                    _this.hisId = keycode
-                    code = ''
-                }
-                _this.getHisInfoFun(_this.hisId)
-            }
-            if (nextCode == 13 && keycode != '' && nextTime - lastTime <= 100) { // 回车字符
-                code = keycode;
-                keycode = '';
-                lastCode = null;
-                lastTime = null;
-            } else { // 此处可以增加限制nextCode的种类例如数字
-                if (lastCode == null && lastTime == null) { // 初始字母
-                    keycode = String.fromCharCode(nextCode);
-                } else if (lastCode != null && lastTime != null && nextTime - lastTime <= 100){
-                    keycode += String.fromCharCode(nextCode);
-                } else { // 手动输入
-                    keycode = '';
-                    lastCode = null;
-                    lastTime = null;
-                }
-                lastCode = nextCode;
-                lastTime = nextTime;
-            }
-        } */
+        this.updateTime()
     },
     created() {
         this.checkAddress = localStorage.get(HOSPITAL) ? localStorage.get(HOSPITAL) : ''
         this.focusHisId()
+        this.getAppointmentFn()
+        this.getReportType()
     },
     methods: {
+        // 更新预约时间
+        updateTime() {
+            this.date = Utils.formatTime(Utils.getTime(), 'yyyy-MM-dd')
+            this.timeSlot = Utils.formatTime(Utils.getTime(), 'hh:mm:ss')
+            this.reservationDate = this.timeSlot
+        },
+        // 获取配置信息，判断是 hisid 还是 申请号
+        getAppointmentFn() {
+            patientService.getAppointment().then(data => {
+                data || (data = {})
+                if (data['code'] != commonService.STATUS_SUCCESS) {
+                    commonService.Warning(data['code'], data['msg'])
+                    return data
+                }
+                this.appointment = data.appointment
+            }, error => {
+                Popup.hideLoading()
+                patientService.NetWorkFail()
+            })
+        },
+        // 获取报告类型
+        getReportType() {
+            patientService.reportType().then(data => {
+                data || (data = {})
+                if (data['code'] != patientService.STATUS_SUCCESS) {
+                    return patientService.Warning(data['code'], data['msg'])
+                }
+                this.reportTypeList = data && data.list || []
+            }, patientService.NetWorkFail).finally(() => {
+                this.loadingTime = setTimeout(() => {
+                    this.loading = false
+                }, 500)
+            })
+        },
         // 获取患者数据
         getHisInfoFun(data) {
+            this.hisIdChange()
+            this.weightBtn.btnShow = false
             let hisId = this.replaceFun(this.hisId)
             if (Utils.size(hisId) < 1) {
                 return false
@@ -349,7 +351,12 @@ export default {
                 let _data = {
                     hisId: hisId
                 }
-                Popup.showToast.Success('扫描成功，正在获取数据')
+                if (this.appointment == '0') {
+                    _data = {
+                        applyID: hisId
+                    }
+                }
+                Popup.showToast.Success('正在获取患者数据')
                 patientService.getHisInfo(_data).then(data => {
                     data || (data = {})
                     if (data['code'] != commonService.STATUS_SUCCESS) {
@@ -357,24 +364,60 @@ export default {
                         return data
                     }
                     this.ruleForm = data.object || {}
-                    this.gender = this.ruleForm.gender == '0' ? '男' : '女'
-                    this.setBMI()
                     this.timeChange()
-                    this.hisId = this.ruleForm.hisId
+                    // this.hisId = this.ruleForm.hisId
                     this.$refs['ruleForm'].resetFields()
                     this.getReservationList()
+                    this.measureFun()
                 }, error => {
                     Popup.hideLoading()
                     patientService.NetWorkFail()
                 })
             }
         },
+        // 点击身高重新测量按钮
+        measureFunClick() {
+            this.measureFun()
+        },
+        // 获取身高体重
+        measureFun() {
+            this.weightBtn.btnClick = false
+            patientService.getMeasure().then(data => {
+                data || (data = {})
+                if (data['code'] != commonService.STATUS_SUCCESS) {
+                    commonService.Warning(data['code'], data['msg'])
+                    this.weightBtn.btnShow = true
+                    this.weightBtn.btnClick = true
+                    return data
+                }
+                this.ruleForm.weight = data.weight || ''
+                this.ruleForm.height = data.height || ''
+            }, error => {
+                Popup.hideLoading()
+                patientService.NetWorkFail()
+                this.weightBtn.btnShow = true
+                this.weightBtn.btnClick = true
+            }).finally(() => {
+                this.weightBtn.btnClick = true
+            })
+        },
         // hisid过滤
         replaceFun(val) {
             return val.replace(/[^a-zA-Z0-9]+/g, '');
         },
         hisIdChange() {
-            this.ruleForm.hisId = this.hisId
+            if (!Utils.size(this.hisId)) {
+                this.focusHisId()
+                this.hisIdError = true
+                return
+            } else {
+                this.hisIdError = false
+            }
+            if (this.appointment == '0') {
+                this.ruleForm.applyID = this.hisId
+            } else {
+                this.ruleForm.hisId = this.hisId
+            }
         },
         // 获取已预约信息
         getReservationList() {
@@ -410,18 +453,24 @@ export default {
                     }
                 }
             }
-            if (!Utils.size(this.reservationDate)) {
+            /* if (!Utils.size(this.reservationDate)) {
                 Popup.showToast.Warning('请选择预约时间段')
                 return
-            }
+            } */
             if (isFull >= 3) {
                 Popup.showToast.Warning('此预约已满，请选择其他时间段')
                 return
             }
-            // this.reservationApplys.push({'checkProject': this.typeSelect, 'applyDate': time})
             this.reservationApplys = [{'checkProject': this.typeSelect, 'applyDate': time}]
             this.dialogFormVisible.isVisble = false
             this.isReservation = 1
+        },
+        // 预约时间关闭弹窗
+        dialogCloseFun() {
+            this.dialogFormVisible.isVisble = false
+            this.timeSlot = ''
+            this.i = ''
+            this.reservationDate = ''
         },
          // 查询预约时间段
         reservationInfoFun() {
@@ -452,26 +501,38 @@ export default {
         },
         // 点击提交数据
         reservationSaveFun(formName) {
+            let does = false
             this.$refs[formName].validate((valid) => {
                 if (valid) {
+                    does = true
                     // alert('submit!');
                 } else {
                     console.log('error submit!!');
                     return false;
                 }
             });
-            if (Utils.size(this.typeSelect) == 0) {
+            if (!does) {
+                return false
+            }
+            this.updateTime()
+            if (this.appointment == '0') {
+                this.ruleForm.applyID = this.hisId
+            } else {
+                this.ruleForm.hisId = this.hisId
+            }
+            /* if (Utils.size(this.typeSelect) == 0) {
                 Popup.showToast.Warning('请选择预约项目')
                 return false
             }
             if (Utils.size(this.date) == 0 || Utils.size(this.reservationDate) == 0) {
                 Popup.showToast.Warning('请选择预约时间')
                 return false
-            }
+            } */
             document.body.scrollTop = document.documentElement.scrollTop = 0;
-            this.ruleForm.gender = this.gender == '男' ? '0' : '1'
+            // this.ruleForm.hisId = undefined; // 删除 object 属性
             let _data = this.ruleForm
-            _data.gender = this.gender == '男' ? '0' : '1'
+            let time = this.date + ' ' + this.reservationDate;
+            this.reservationApplys = [{'checkProject': this.typeSelect, 'applyDate': time}]
             _data.reservationApplys = this.reservationApplys
             patientService.reservationSave(_data).then(data => {
                 data || (data = {})
@@ -483,22 +544,29 @@ export default {
                 this.printID = data.object.applyId
                 this.$refs.printRef.reservationApplyFun(this.printID);
                 this.isUpdate = 1
-                this.getReservationList()
                 localStorage.set(HOSPITAL, this.checkAddress)
                 let date = this.date
+                let typeSelect = this.typeSelect
                 this.$refs.calendarRef.getDateNumberList(new Date(date).setDate(1))
-                let typeSelect = this.typeSelect == 0 ? '常规肺功能' : '激发实验'
-                Popup.confirm(`是否打印数据？ ` + typeSelect + ' ' + this.date + ' ' + this.timeSlot).then(flag => {
+                let reportName = ''
+                this.reportTypeList.forEach(function(item, index) {
+                    if (typeSelect == item.type) {
+                        reportName = item.name
+                    }
+                })
+                Popup.confirm(`是否打印数据？ ` + reportName + ' ' + this.date + ' ' + this.timeSlot).then(flag => {
                     if (flag) {
                         this.isPrint = true
                     }
                 })
+                this.getReservationList()
                 // 清除预约时间段（防止重复提交）
-                this.delReservationFun()
-                this.date = ''
-                this.typeSelect = ''
+                // this.delReservationFun()
+                // this.date = ''
+                // this.typeSelect = ''
                 this.calIndex = ''
-                this.timeSlot = ''
+                // this.timeSlot = ''
+                this.weightBtn.btnShow = false
             }, error => {
                 Popup.hideLoading()
                 patientService.NetWorkFail()
@@ -508,6 +576,8 @@ export default {
         resetForm() {
             this.isUpdate = 0
             this.clearInfo()
+            this.updateTime()
+            this.weightBtn.btnShow = false
             /* if (this.isUpdate === 0) {
                 Popup.confirm(`预约数据未提交，是否确定清除数据？`).then(flag => {
                     if (flag) {
@@ -521,7 +591,6 @@ export default {
         clearInfo() {
             this.$refs.ruleForm.resetFields();
             this.ruleForm = {
-                hisId: '',
                 clinicNum: '',
                 name: '',
                 gender: '',
@@ -538,12 +607,13 @@ export default {
             }
             this.List = {}
             this.isReservation = 0
-            this.reservationApplys = []
-            this.typeSelect = ''
-            this.date = ''
+            // this.reservationApplys = []
+            // this.typeSelect = ''
+            // this.date = ''
+            // this.timeSlot = ''
             this.reservationArray = []
             this.age = ''
-            this.BMI = ''
+            // this.BMI = ''
             this.i = ''
             this.hisId = ''
             this.gender = ''
@@ -551,7 +621,6 @@ export default {
             this.calDate = ''
             this.$refs.calendarRef.clearI()
             this.focusHisId()
-            this.timeSlot = ''
         },
         // ID input 框获取焦点
         focusHisId() {
@@ -600,12 +669,6 @@ export default {
                 this.focusHisId()
             }
             this.delReservationFun()
-        },
-        // 计算 BMI
-        setBMI() {
-            if (this.ruleForm.height && this.ruleForm.weight) {
-                this.BMI = parseInt(this.ruleForm.weight / (this.ruleForm.height * this.ruleForm.height / 10000))
-            }
         },
         // 计算年龄
         timeChange() {
@@ -657,6 +720,13 @@ export default {
             this.timeSlot = val.timeSlot
             this.i = val.index
             this.reservationDate = val.time
+        }
+    },
+    computed: {
+        BMI: function () {
+            if (this.ruleForm.height && this.ruleForm.weight) {
+                return parseInt(this.ruleForm.weight / (this.ruleForm.height * this.ruleForm.height / 10000))
+            }
         }
     }
 };
@@ -752,7 +822,7 @@ export default {
             background: #fff;
             th{
                 font-weight: 400;
-                
+
                 width: 90px;
                 cursor: pointer;
             }
@@ -770,7 +840,7 @@ export default {
         padding: 0 16px;
         text-align: right;
     }
-} 
+}
 .home-head{
     position: relative;
     padding-left: 62px;
@@ -807,7 +877,7 @@ export default {
 }
 .re-info span{padding-left: 5px;}
 .re-scroll{
-    height: 100px; 
+    height: 100px;
     overflow: auto;
     line-height: 1;
     margin-bottom: 0;
