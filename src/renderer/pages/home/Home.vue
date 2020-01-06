@@ -219,6 +219,8 @@ export default {
             hisIdError: false, // 判断 ID 输入框是否为空
             gender: '', // 性别
             ruleForm: {
+                hisId: '',
+                applyID: '',
                 clinicNum: '',
                 name: '',
                 gender: '', // 0-男 1-女
@@ -328,12 +330,14 @@ export default {
         },
         // 获取报告类型
         getReportType() {
-            patientService.reportType().then(data => {
+            patientService.reservationType().then(data => {
                 data || (data = {})
                 if (data['code'] != patientService.STATUS_SUCCESS) {
                     return patientService.Warning(data['code'], data['msg'])
                 }
                 this.reportTypeList = data && data.list || []
+                this.reportTypeList.push({name: '其他', type: ''})
+                console.log(this.reportTypeList)
             }, patientService.NetWorkFail).finally(() => {
                 this.loadingTime = setTimeout(() => {
                     this.loading = false
@@ -591,6 +595,8 @@ export default {
         clearInfo() {
             this.$refs.ruleForm.resetFields();
             this.ruleForm = {
+                hisId: '',
+                applyID: '',
                 clinicNum: '',
                 name: '',
                 gender: '',

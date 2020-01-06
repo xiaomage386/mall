@@ -122,8 +122,8 @@ class PatientService extends BaseService {
     /**
      * 获取报告类型
      */
-    reportType(config = {}) {
-        return this.httpClientJson.post('api.report.reportType', config)
+    reservationType(config = {}) {
+        return this.httpClientJson.post('api.reporttemplate.reservationType', config)
     }
 
     /***
