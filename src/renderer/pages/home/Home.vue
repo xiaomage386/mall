@@ -348,7 +348,8 @@ export default {
         getHisInfoFun(data) {
             this.hisIdChange()
             this.weightBtn.btnShow = false
-            let hisId = this.replaceFun(this.hisId)
+            // let hisId = this.replaceFun(this.hisId)
+            let hisId = this.hisId
             if (Utils.size(hisId) < 1) {
                 return false
             } else {
