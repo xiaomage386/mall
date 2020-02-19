@@ -126,6 +126,13 @@ class PatientService extends BaseService {
         return this.httpClientJson.post('api.reporttemplate.reservationType', config)
     }
 
+    /**
+     * 获取连接状态
+     */
+    connect(config = {}) {
+        return this.httpClientJson.post('api.sysConfig.connect', config)
+    }
+
     /***
      * 排序数据
      * @param 预计值数据

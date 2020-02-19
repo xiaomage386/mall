@@ -89,6 +89,7 @@ const COOKIE_CLAUSE = APP_CONFIG['NAME'] + '_CLAUSE';
 const SERVICE_TYPE = APP_CONFIG['NAME'] + '_SERVICE_TYPE';
 const LOGIN_NAME = APP_CONFIG['NAME'] + '_LOGIN_NAME';
 const LOGIN_URL = APP_CONFIG['NAME'] + '_LOGIN_URL';
+const CONNECT_STATUS = APP_CONFIG['NAME'] + '_CONNECT_STATUS';
 // 原生窗口信息
 const WIN_CONFIG = REMOTE_CONFIG['BrowserWindow'];
 export default {
@@ -174,6 +175,8 @@ export default {
                     currentWindow.center()
                     localStorage.set(COOKIE_CLAUSE, true);
                     localStorage.set(LOGIN_NAME, _data.username)
+                    // 连接状态的获取接口间隔时长
+                    localStorage.set(CONNECT_STATUS, data.object.connectDate)
                     Popup.showToast.Success('登录成功！')
                     // 同步数据到本地服务
                     /* if (this.radio == 2) {

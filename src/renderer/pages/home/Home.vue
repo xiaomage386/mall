@@ -6,7 +6,8 @@
         <div id="main" v-show="!isPrint">
             <Menus slot="menus"></Menus>
             <div class="content">
-                <el-form :model="ruleForm" label-position="right" :rules="rules" ref="ruleForm" label-width="100px">
+                <div class="connect"><i :class="{'err':isConnect.status == false}"  ></i><span v-text="isConnect.text">连接成功</span></div>
+                <el-form :model="ruleForm" label-position="right" :rules="rules" ref="ruleForm" label-width="110px">
                     <el-row>
                         <el-col :span="7">
                             <div class="title">填写基本信息</div>
@@ -129,6 +130,11 @@
                         <el-col :span="10">
                             <div class="title">选择时间地点项目</div>
                             <el-col :span="18">
+                                <!-- <el-form-item label="检测类型">
+                                    <el-select placeholder="" v-model="isTemporary">
+                                        <el-option :label="item.name" :value="item.type" v-for="(item, index) in reportTypeList" :key="index"></el-option>
+                                    </el-select>
+                                </el-form-item> -->
                                 <el-form-item label="检测地点">
                                     <el-input v-model="checkAddress"></el-input>
                                 </el-form-item>
@@ -211,6 +217,7 @@ import Printing from '@/pages/Printing/Printing'
 import Menus from '@/components/Menu/Menus.vue'
 import calendar from './components/calendar'
 const HOSPITAL = APP_CONFIG['NAME'] + '_HOSPITAL_LOCAL';
+const CONNECT_STATUS = APP_CONFIG['NAME'] + '_CONNECT_STATUS';
 const { remote, ipcRenderer } = require('electron')
 var spawn = require('child_process').spawn;
 const os = require('os')
@@ -303,7 +310,12 @@ export default {
                 btnShow: false
             },
             typeSelect: '1', // 检测项目
-            reportTypeList: [] // 报告类型列表
+            reportTypeList: [], // 报告类型列表
+            isConnect: {
+                status: false, // 是否连接成功
+                text: '尝试连接' // 连接状态提示语
+            },
+            timer: null // 定时器
         }
     },
     mounted() {
@@ -326,6 +338,8 @@ export default {
         this.focusHisId()
         this.getAppointmentFn()
         this.getReportType()
+        this.getConnect()
+        this.connectFun()
     },
     methods: {
         // 更新预约时间
@@ -338,8 +352,8 @@ export default {
         getAppointmentFn() {
             patientService.getAppointment().then(data => {
                 data || (data = {})
-                if (data['code'] != commonService.STATUS_SUCCESS) {
-                    commonService.Warning(data['code'], data['msg'])
+                if (data['code'] != patientService.STATUS_SUCCESS) {
+                    patientService.Warning(data['code'], data['msg'])
                     return data
                 }
                 this.appointment = data.appointment
@@ -384,8 +398,8 @@ export default {
                 Popup.showToast.Success('正在获取患者数据')
                 patientService.getHisInfo(_data).then(data => {
                     data || (data = {})
-                    if (data['code'] != commonService.STATUS_SUCCESS) {
-                        commonService.Warning(data['code'], data['msg'])
+                    if (data['code'] != patientService.STATUS_SUCCESS) {
+                        patientService.Warning(data['code'], data['msg'])
                         return data
                     }
                     this.ruleForm = data.object || {}
@@ -409,8 +423,8 @@ export default {
             this.weightBtn.btnClick = false
             patientService.getMeasure().then(data => {
                 data || (data = {})
-                if (data['code'] != commonService.STATUS_SUCCESS) {
-                    commonService.Warning(data['code'], data['msg'])
+                if (data['code'] != patientService.STATUS_SUCCESS) {
+                    patientService.Warning(data['code'], data['msg'])
                     this.weightBtn.btnShow = true
                     this.weightBtn.btnClick = true
                     return data
@@ -454,8 +468,8 @@ export default {
             }
             patientService.getReservationList(_data).then(data => {
                 data || (data = {})
-                if (data['code'] != commonService.STATUS_SUCCESS) {
-                    commonService.Warning(data['code'], data['msg'])
+                if (data['code'] != patientService.STATUS_SUCCESS) {
+                    patientService.Warning(data['code'], data['msg'])
                     return data
                 }
                 this.List = data.object.list
@@ -505,8 +519,8 @@ export default {
             }
             patientService.reservationInfo(_data).then(data => {
                 data || (data = {})
-                if (data['code'] != commonService.STATUS_SUCCESS) {
-                    commonService.Warning(data['code'], data['msg'])
+                if (data['code'] != patientService.STATUS_SUCCESS) {
+                    patientService.Warning(data['code'], data['msg'])
                     return data
                 }
                 this.array = data.object
@@ -561,8 +575,8 @@ export default {
             _data.reservationApplys = this.reservationApplys
             patientService.reservationSave(_data).then(data => {
                 data || (data = {})
-                if (data['code'] != commonService.STATUS_SUCCESS) {
-                    commonService.Warning(data['code'], data['msg'])
+                if (data['code'] != patientService.STATUS_SUCCESS) {
+                    patientService.Warning(data['code'], data['msg'])
                     return data
                 }
                 Popup.showToast.Success('提交成功！')
@@ -747,6 +761,47 @@ export default {
             this.timeSlot = val.timeSlot
             this.i = val.index
             this.reservationDate = val.time
+        },
+        // 连接状态 定时器函数
+        connectFun() {
+            let time = localStorage.get(CONNECT_STATUS)
+            this.getConnect()
+            if (time) {
+                this.timer = setTimeout(this.connectFun, parseFloat(time) * 1000);
+            }
+        },
+        // 调用连接状态函数
+        getConnect() {
+            let setTime = setTimeout(() => {
+                this.isConnect.text = '尝试连接'
+                this.isConnect.status = false
+            }, 3000)
+            patientService.connect().then(data => {
+                data || (data = {})
+                if (data['code'] != patientService.STATUS_SUCCESS) {
+                    clearTimeout(setTime)
+                    this.isConnect.text = '尝试连接'
+                    this.isConnect.status = false
+                    // commonService.Warning(data['code'], data['msg'])
+                    return data
+                }
+                clearTimeout(setTime)
+                this.isConnect.text = '连接中'
+                this.isConnect.status = true
+            }, error => {
+                clearTimeout(setTime)
+                this.isConnect.text = '尝试连接'
+                this.isConnect.status = false
+                // Popup.hideLoading()
+                // patientService.NetWorkFail()
+            })
+        }
+    },
+    // 销毁定时器
+    beforeDestroy: function() {
+        if (this.timer) {
+            console.log('销毁定时器')
+            clearTimeout(this.timer); // 在Vue实例销毁前，清除我们的定时器
         }
     },
     computed: {
@@ -760,6 +815,9 @@ export default {
 </script>
 <style scoped lang="scss">
 .el-form-item{margin-bottom: 16px;}
+.connect{position: absolute; right: 10px; top: 10px;}
+.connect i{display: inline-block; width: 18px; height: 18px; background: #3394f5;box-shadow: 0 0 5px rgba($color: #3394f5, $alpha: 0.3); background-image: radial-gradient(#3394f5, #3394f5); border-radius: 50%; margin-right: 5px; position: relative; top: 4px;}
+.connect i.err{background:#ddd;box-shadow: 0 0 5px rgba($color: #ddd, $alpha: 0.3);}
 .home{
     .content {
         position: relative;
