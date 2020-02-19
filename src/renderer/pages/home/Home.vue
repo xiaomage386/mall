@@ -63,9 +63,10 @@
                                 <el-col :span="12">kg</el-col>
                             </el-form-item>
                             <el-form-item label="BMI">
-                                <el-col :span="12">
-                                    <el-input v-model="BMI"></el-input>
-                                </el-col>
+                                <el-input v-model="BMI"></el-input>
+                            </el-form-item>
+                            <el-form-item label="籍贯">
+                                <el-input v-model="ruleForm.address"></el-input>
                             </el-form-item>
                             <div class="foot-btn">
                                 <el-button type="danger" @click="resetForm()">清空</el-button>
@@ -75,16 +76,32 @@
                         </el-col>
                         <el-col :span="7">
                             <div class="title">填写选填信息</div>
-                            <el-form-item label="籍贯">
-                                <el-input v-model="ruleForm.address"></el-input>
-                            </el-form-item>
                             <el-form-item label="电话">
                                 <el-input v-model="ruleForm.mobile"></el-input>
                             </el-form-item>
                             <el-form-item label="职业">
                                 <el-input v-model="ruleForm.job"></el-input>
                             </el-form-item>
-                            <el-form-item label="既往史">
+                            <el-form-item label="申请单状态">
+                                <el-input v-model="ruleForm.applyStatue"></el-input>
+                            </el-form-item>
+                            <el-form-item label="缴费状态">
+                                <!-- <el-select placeholder="" v-model="ruleForm.chargeFlag" @change="changeTypeSelect"> -->
+                                <el-select placeholder="" v-model="ruleForm.chargeFlag">
+                                    <el-option label="已缴费" value="1"></el-option>
+                                    <el-option label="未缴费" value="0"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="缴费时间">
+                                <el-date-picker
+                                    v-model="ruleForm.chargeDate"
+                                    type="date"
+                                    value-format="yyyy-MM-dd"
+                                    :picker-options="pickerOptionsDate"
+                                    placeholder="选择日期">
+                                </el-date-picker>
+                            </el-form-item>
+                            <el-form-item label="既往史/过敏史">
                                 <el-input v-model="ruleForm.medicalHistory"></el-input>
                             </el-form-item>
                             <el-form-item label="吸烟史">
@@ -233,7 +250,10 @@ export default {
                 medicalHistory: '',
                 smokingVolume: '',
                 quitSmoking: '',
-                remarks: ''
+                remarks: '',
+                applyStatue: '', // 申请单状态
+                chargeFlag: '', // 缴费状态 (0-否，1-是)
+                chargeDate: '' // 缴费时间
             },
             rules: {
                 hisId: [
@@ -739,6 +759,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.el-form-item{margin-bottom: 16px;}
 .home{
     .content {
         position: relative;

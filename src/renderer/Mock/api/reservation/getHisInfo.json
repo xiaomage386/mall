@@ -16,6 +16,9 @@
         "smokingHistory": "20",
         "smokingVolume": "10",
         "quitSmoking": "没有",
-        "remarks": "加强锻炼"
+        "remarks": "加强锻炼",
+        "applyStatue": "已申请",
+        "chargeFlag": "",
+        "chargeDate": "2020-11-07"
     }
 }

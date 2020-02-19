@@ -38,7 +38,8 @@
                     <tr><th>体重：</th><td><span v-text="tableData.weight"></span> kg</td><th>身高：</th><td><span v-text="tableData.height"></span> cm</td><th>BMI：</th><td v-text="bmi"></td></tr>
                     <tr><th>出生日期：</th><td v-text="tableData.birthday"></td><th>年龄：</th><td><span v-text="age"></span> 岁</td><th>电话：</th><td v-text="tableData.mobile"></td></tr>
                     <tr><th>职业：</th><td v-text="tableData.job"></td><th>吸烟史：</th><td><span v-text="tableData.smokingHistory"></span> 年</td><th>吸烟量：</th><td><span v-text="tableData.smokingVolume"></span> 支/天</td></tr>
-                    <tr><th>已戒烟：</th><td><span v-text="tableData.quitSmoking"></span> 年</td><th>既往史：</th><td>{{tableData.medicalHistory}}</td><th>检查时间：</th><td v-text="tableData.applyDate"></td></tr>
+                    <tr><th>已戒烟：</th><td><span v-text="tableData.quitSmoking"></span> 年</td><th>既往史/过敏史：</th><td>{{tableData.medicalHistory}}</td><th>检查时间：</th><td v-text="tableData.applyDate"></td></tr>
+                    <tr><th>申请单状态：</th><td><span v-text="tableData.applyStatue"></span></td><th>缴费状态：</th><td><span v-if="tableData.chargeFlag === '0'">未缴费</span><span v-if="tableData.chargeFlag === '1'">已缴费</span></td><th>缴费时间：</th><td v-text="tableData.chargeDate"></td></tr>
                     <tr><th>检查项目：</th><td><span v-for="item in reportTypeList" v-if="item.type == tableData.checkProject">{{item.name}}</span></td><th>籍贯：</th><td colspan="3" v-text="tableData.address"></td></tr>
                     <tr><th>备注：</th><td colspan="5"><span>{{tableData.remarks}}</span></td></tr>
                     <tr><td colspan="6" style="height: 750px;"></td></tr>
@@ -236,7 +237,7 @@ export default {
 .printing .content .title .barcode{position: absolute;left: 0;}
 .printing .content table{width: 100%; border-collapse: collapse; font-size: 14px;border: 2px solid #333;}
 .printing .content table td{text-align: center; width: 172px;}
-.printing .content table th{width: 90px;}
+.printing .content table th{width: 115px;}
 .printing .content table th, .printing .content table td{border: 1px solid #333;padding: 10px 6px;color: #000;}
 @media print {
     .noPrn {display: none}
