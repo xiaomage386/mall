@@ -127,6 +127,13 @@ class PatientService extends BaseService {
     }
 
     /**
+     * 查询患者类型 门诊/住院 等
+     */
+    findPatientTypeList(config = {}) {
+        return this.httpClientJson.post('api.reportpatientpara.patientType', config)
+    }
+
+    /**
      * 获取连接状态
      */
     connect(config = {}) {

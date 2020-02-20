@@ -130,17 +130,17 @@
                         <el-col :span="10">
                             <div class="title">选择时间地点项目</div>
                             <el-col :span="18">
-                                <!-- <el-form-item label="检测类型">
-                                    <el-select placeholder="" v-model="isTemporary">
-                                        <el-option :label="item.name" :value="item.type" v-for="(item, index) in reportTypeList" :key="index"></el-option>
-                                    </el-select>
-                                </el-form-item> -->
                                 <el-form-item label="检测地点">
                                     <el-input v-model="checkAddress"></el-input>
                                 </el-form-item>
                                 <el-form-item label="检测项目">
                                     <el-select placeholder="" v-model="typeSelect" @change="changeTypeSelect">
                                         <el-option :label="item.name" :value="item.type" v-for="(item, index) in reportTypeList" :key="index"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="患者类型">
+                                    <el-select placeholder="" v-model="ruleForm.isTemporary">
+                                        <el-option :label="item.value" :value="item.key" v-for="(item, index) in patientTypeList" :key="item.key"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
@@ -206,7 +206,7 @@
     </div>
 </template>
 <script>
-import commonService from '@services/commonService'
+// import commonService from '@services/commonService'
 import patientService from '@services/patientService'
 import Popup from '@modules/Popup'
 import Utils from '@modules/Utils';
@@ -260,7 +260,8 @@ export default {
                 remarks: '',
                 applyStatue: '', // 申请单状态
                 chargeFlag: '', // 缴费状态 (0-否，1-是)
-                chargeDate: '' // 缴费时间
+                chargeDate: '', // 缴费时间
+                isTemporary: '' // 门诊/住院 v-model
             },
             rules: {
                 hisId: [
@@ -315,7 +316,8 @@ export default {
                 status: false, // 是否连接成功
                 text: '尝试连接' // 连接状态提示语
             },
-            timer: null // 定时器
+            timer: null, // 定时器
+            patientTypeList: [] // 门诊/住院
         }
     },
     mounted() {
@@ -338,6 +340,7 @@ export default {
         this.focusHisId()
         this.getAppointmentFn()
         this.getReportType()
+        this.getPatientTypeList()
         this.getConnect()
         this.connectFun()
     },
@@ -378,6 +381,16 @@ export default {
                 }, 500)
             })
         },
+        // 获取患者类型
+        getPatientTypeList() {
+            patientService.findPatientTypeList().then(data => {
+                data || (data = {})
+                if (data['code'] != patientService.STATUS_SUCCESS) {
+                    return patientService.Warning(data['code'], data['msg'])
+                }
+                this.patientTypeList = data && data.list || []
+            })
+        },
         // 获取患者数据
         getHisInfoFun(data) {
             this.hisIdChange()
@@ -404,7 +417,6 @@ export default {
                     }
                     this.ruleForm = data.object || {}
                     this.timeChange()
-                    // this.hisId = this.ruleForm.hisId
                     this.$refs['ruleForm'].resetFields()
                     this.getReservationList()
                     this.measureFun()
