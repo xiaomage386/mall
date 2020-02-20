@@ -88,7 +88,7 @@
                             </el-form-item>
                             <el-form-item label="缴费状态">
                                 <!-- <el-select placeholder="" v-model="ruleForm.chargeFlag" @change="changeTypeSelect"> -->
-                                <el-select placeholder="" v-model="ruleForm.chargeFlag">
+                                <el-select clearable placeholder="" v-model="ruleForm.chargeFlag">
                                     <el-option label="已缴费" value="1"></el-option>
                                     <el-option label="未缴费" value="0"></el-option>
                                 </el-select>
@@ -139,7 +139,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="患者类型">
-                                    <el-select placeholder="" v-model="ruleForm.isTemporary">
+                                    <el-select clearable placeholder="" v-model="ruleForm.isTemporary">
                                         <el-option :label="item.value" :value="item.key" v-for="(item, index) in patientTypeList" :key="item.key"></el-option>
                                     </el-select>
                                 </el-form-item>
