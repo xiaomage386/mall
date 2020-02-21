@@ -476,7 +476,9 @@ export default {
                 return false
             }
             let _data = {
-                reservationId: this.hisId
+                reservationId: this.hisId,
+                pageSize: 10,
+                currPage: 1
             }
             patientService.getReservationList(_data).then(data => {
                 data || (data = {})

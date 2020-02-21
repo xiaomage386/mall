@@ -5,33 +5,33 @@ export default {
                 'id': 1,
                 'parentMenuId': 0,
                 'name': 'systemManage',
-                'icon': 'icon icon-index',
-                'alias': '首页',
+                'icon': 'icon icon-add-reservation',
+                'alias': '新增预约补录',
                 'state': 'ENABLE',
                 'sort': 0,
                 'route': '/Home',
                 'value': '/Home',
                 'type': 'NONE',
-                'discription': '用于系统管理的菜单',
+                'discription': '用于预约补录的菜单',
                 'createUserId': 1
             }
         },
- /*        {
+        {
             'entity': {
-                'id': 0,
+                'id': 2,
                 'parentMenuId': 0,
                 'name': 'userManage',
-                'icon': 'icon icon-play',
-                'alias': '流速-容量测试',
+                'icon': 'icon icon-reservation',
+                'alias': '查询预约列表',
                 'state': 'ENABLE',
                 'sort': 1,
-                'route': '/testData',
-                'value': '/testData',
+                'route': '/Reserve',
+                'value': '/Reserve',
                 'type': 'NONE',
-                'discription': '用于用户管理的菜单',
+                'discription': '用于预约补录的菜单',
                 'createUserId': 1
             }
-        }, */
+        },
         {
             'entity': {
                 'id': '',
@@ -55,13 +55,13 @@ export default {
             'parentMenuId': 0,
             'name': 'userManage',
             'icon': 'icon icon-setting',
-            'alias': '分类',
+            'alias': '设置',
             'state': 'ENABLE',
             'sort': 1,
             'route': '/setting',
             'value': '/setting',
             'type': 'NONE',
-            'discription': '用于用户管理的菜单',
+            'discription': '用于预约补录的菜单',
             'createUserId': 1
         }
     }, {

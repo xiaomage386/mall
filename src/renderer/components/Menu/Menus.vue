@@ -43,10 +43,8 @@ export default {
             setIndex: '1',
             menuConfig: {
                 Home: '1',
-                User: '3',
-                UserDetail: '3',
-                Setting: '100',
-                Report: '2'
+                Reserve: '2',
+                Setting: '100'
             }
         }
     },

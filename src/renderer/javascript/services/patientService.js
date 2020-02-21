@@ -90,8 +90,6 @@ class PatientService extends BaseService {
      * @param {*} config
      */
     getReservationList(config) {
-        config['pageSize'] = 10
-        config['currPage'] = 1
         let _config = Utils.toJson(config)
         return this.httpClientJson.post('api.reservationApply.pageList', _config)
     }

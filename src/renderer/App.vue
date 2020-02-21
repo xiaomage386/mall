@@ -116,6 +116,8 @@ export default {
     .icon.icon-download{background-position-y: -1661px;}
     .icon.icon-delete{background-position-y: -1704px;}
     .icon.icon-list{background-position-y: -1747px;}
+    .icon.icon-reservation{background-position-y: -1798px;}
+    .icon.icon-add-reservation{background-position-y: -1857px;}
 
 
     /* btn图标 */
@@ -171,4 +173,13 @@ export default {
     .file-wapper { position: relative; overflow: hidden; margin: 0 auto 10px;}
     .file-wapper .el-input { position: absolute; top: 0; left: 0; z-index: 1; opacity: 0; width: 100px; height: 40px; cursor: pointer; }
     .file-wapper .el-button { width: 100px; height: 40px;  cursor: pointer; }
+
+    .btn-list .el-button{float: left;}
+    .btn-list .el-input{float: left;padding: 0; width: 200px;height: 40px;line-height: 40px;text-align: left;margin-right: 10px;}
+    .btn-list .el-select{float: left;padding: 0;height: 40px;line-height: 40px;text-align: left;}
+    .btn-list .date{float: left;height: 40px;line-height: 40px;text-align: left;margin-right: 10px;}
+    .btn-list .icon{float: left;margin: 5px 0 0 -5px;transform: scale(0.8)}
+    .btn-list .icon-btn{float: left;margin-left:5px;margin-right:5px;}
+    .btn-list .el-upload{margin-left:10px;}
+    .btn-list .bigWidth{margin-left: 10px;min-width: 110px;}
 </style>

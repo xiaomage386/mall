@@ -4,6 +4,7 @@ import Home from '@/pages/home/Home'
 import Auth from '@/pages/auth/Auth'
 import Setting from '@/pages/setting/Setting'
 import Rrinting from '@/pages/Printing/Printing'
+import Reserve from '@/pages/reserve/reserve'
 Vue.use(Router)
 
 export default new Router({
@@ -29,6 +30,11 @@ export default new Router({
         path: '/setting',
         name: 'Setting',
         component: Setting
+    },
+    {
+        path: '/Reserve',
+        name: 'Reserve',
+        component: Reserve
     }
     ]
 })
