@@ -317,7 +317,8 @@ export default {
                 text: '尝试连接' // 连接状态提示语
             },
             timer: null, // 定时器
-            patientTypeList: [] // 门诊/住院
+            patientTypeList: [], // 门诊/住院
+            isFocus: true // 控制是否能进行聚焦
         }
     },
     mounted() {
@@ -374,7 +375,6 @@ export default {
                 }
                 this.reportTypeList = data && data.list || []
                 this.reportTypeList.push({name: '其他', type: ''})
-                console.log(this.reportTypeList)
             }, patientService.NetWorkFail).finally(() => {
                 this.loadingTime = setTimeout(() => {
                     this.loading = false
@@ -680,7 +680,9 @@ export default {
         focusHisId() {
             this.$nextTick(() => {
                 setTimeout(() => {
-                    document.getElementById('hisIdInput').focus()
+                    if (this.isFocus) {
+                        document.getElementById('hisIdInput').focus()
+                    }
                 }, 100)
             })
         },
@@ -814,6 +816,7 @@ export default {
     beforeDestroy: function() {
         if (this.timer) {
             console.log('销毁定时器')
+            this.isFocus = false
             clearTimeout(this.timer); // 在Vue实例销毁前，清除我们的定时器
         }
     },

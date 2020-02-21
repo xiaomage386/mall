@@ -2,7 +2,7 @@
     <div class="printing clearfix">
         <div class="noPrn">
             <!-- <site-head showTitle="打印结果预览"></site-head> -->
-            <div class="btn-list">
+            <div class="btn-list clearfix">
                 <el-button @click="openPrint">
                     <i class="icon-btn icon-printing"></i>
                     打印
@@ -42,14 +42,13 @@
                     <tr><th>申请单状态：</th><td><span v-text="tableData.applyStatue"></span></td><th>缴费状态：</th><td><span v-if="tableData.chargeFlag === '0'">未缴费</span><span v-if="tableData.chargeFlag === '1'">已缴费</span></td><th>缴费时间：</th><td v-text="tableData.chargeDate"></td></tr>
                     <tr><th>检查项目：</th><td><span v-for="item in reportTypeList" v-if="item.type == tableData.checkProject">{{item.name}}</span></td><th>籍贯：</th><td colspan="3" v-text="tableData.address"></td></tr>
                     <tr><th>备注：</th><td colspan="5"><span>{{tableData.remarks}}</span></td></tr>
-                    <tr><td colspan="6" style="height: 750px;"></td></tr>
+                    <tr><td colspan="6" style="height: 700px;"></td></tr>
                 </table>
             </div>
         </div>
     </div>
 </template>
 <script>
-import commonService from '@services/commonService'
 import patientService from '@services/patientService'
 import Popup from '@modules/Popup'
 import Utils from '@modules/Utils'
@@ -162,8 +161,8 @@ export default {
             }
             patientService.reservationApplyForm(_data).then(data => {
                 data || (data = {})
-                if (data['code'] != commonService.STATUS_SUCCESS) {
-                    commonService.Warning(data['code'], data['msg'])
+                if (data['code'] != patientService.STATUS_SUCCESS) {
+                    patientService.Warning(data['code'], data['msg'])
                     return data
                 }
                 this.tableData = data.object
