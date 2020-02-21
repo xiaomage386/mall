@@ -13,7 +13,7 @@
                             <div class="title">填写基本信息</div>
                             <div class="el-form-item is-required" :class="hisIdError ? 'is-error' : ''"> <!-- is-error -->
                                 <label for="hisId" class="el-form-item__label" style="width: 100px;">ID</label>
-                                <div class="el-form-item__content" style="margin-left: 100px;">
+                                <div class="el-form-item__content" style="margin-left: 109px;">
                                     <div class="el-input">
                                         <input type="text" v-model="hisId" autocomplete="off" id="hisIdInput" class="el-input__inner" @blur="hisIdChange" @keyup.enter="getHisInfoFun">
                                     </div>
@@ -472,11 +472,11 @@ export default {
         },
         // 获取已预约信息
         getReservationList() {
-            if (!this.ruleForm.id) {
+            if (!this.hisId) {
                 return false
             }
             let _data = {
-                reservationId: this.ruleForm.id
+                reservationId: this.hisId
             }
             patientService.getReservationList(_data).then(data => {
                 data || (data = {})
@@ -610,7 +610,6 @@ export default {
                         this.isPrint = true
                     }
                 })
-                this.getReservationList()
                 // 清除预约时间段（防止重复提交）
                 // this.delReservationFun()
                 // this.date = ''
@@ -833,13 +832,13 @@ export default {
 .home{
     .content {
         position: relative;
-        padding: 16px 0;
+        padding: 16px 0 0;
         padding-left: 65px;
         .foot{
             position: fixed;left: 65px;right: 0;bottom: 20px;text-align: center;font-size: 14px;color: #666666;}
     }
     .title {
-        margin-bottom: 20px;
+        margin-bottom: 12px;
         padding-left: 16px;
     }
     .el-col{

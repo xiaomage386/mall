@@ -291,7 +291,7 @@ export default {
     border-bottom: 1px solid #eee;
     box-sizing: border-box;
     cursor: default;
-    height: 45px;
+    height: 43px;
     line-height: 65px;
 }
 .days li.blue{
