@@ -26,6 +26,7 @@
                         ref="singleTable"
                         border
                         :data="reserveList"
+                        height="570px"
                         highlight-current-row
                         size="medium"
                         style="width: 100%">
@@ -49,20 +50,25 @@
                         </el-table-column>
                     </el-table>
                 </div>
+                <site-page @change="handlePageChange"
+                   :total="total"
+                   :page="page"
+                   :size="pageSize"></site-page>
             </div>
         </div>
         <printing ref="printRef" v-show="isPrint" :printID="printID" :reportTypeList="reportTypeList" @close="closePrint"></printing>
     </div>
 </template>
 <script>
-import Menus from '@/components/Menu/Menus.vue'
-import patientService from '@services/patientService'
 import Popup from '@modules/Popup'
 import Utils from '@modules/Utils';
+import patientService from '@services/patientService'
+import Menus from '@/components/Menu/Menus.vue'
 import Printing from '@/pages/Printing/Printing'
+import SitePage from '@/components/sitePage/SitePage'
 export default {
     name: 'Reserve',
-    components: { Menus, Printing },
+    components: { Menus, Printing, SitePage },
     data() {
         return {
             loading: false,
@@ -105,6 +111,7 @@ export default {
                 }
                 this.reserveList = data.object.list
                 this.loading = false
+                this.total = parseInt(data.object && data.object.totalCount)
             }, error => {
                 this.loading = false
                 Popup.hideLoading()
@@ -114,6 +121,13 @@ export default {
                     this.loading = false
                 }, 500)
             })
+        },
+        handlePageChange(val) {
+            // 分页
+            this.loading = true
+            let data = {}
+            this.getReservationList(null, val, data)
+            this.page = val
         },
         // 搜索
         submitForm() {
@@ -149,7 +163,9 @@ export default {
 }
 </script>
 <style scoped>
-.content{padding:8px; padding-left: 73px;}
-.table{margin-top: 8px;}
+.content{padding:10px 0 0; padding-left: 65px;}
+.table{margin-top: 10px;}
 .el-button--small{font-size: 14px;}
+.btn-list{padding: 0 10px;}
+.table{padding: 0 10px;}
 </style>
