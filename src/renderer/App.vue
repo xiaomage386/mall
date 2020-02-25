@@ -175,6 +175,7 @@ export default {
     .file-wapper .el-button { width: 100px; height: 40px;  cursor: pointer; }
 
     .btn-list .el-button{float: left;}
+    .el-dialog .btn-list .el-button{float: none;}
     .btn-list .el-input{float: left;padding: 0; width: 200px;height: 40px;line-height: 40px;text-align: left;margin-right: 10px;}
     .btn-list .el-select{float: left;padding: 0;height: 40px;line-height: 40px;text-align: left;}
     .btn-list .date{float: left;height: 40px;line-height: 40px;text-align: left;margin-right: 10px;}

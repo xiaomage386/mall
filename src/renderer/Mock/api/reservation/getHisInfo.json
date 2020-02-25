@@ -18,7 +18,8 @@
         "quitSmoking": "没有",
         "remarks": "加强锻炼",
         "applyStatue": "已申请",
-        "chargeFlag": "",
-        "chargeDate": "2020-11-07"
+        "chargeFlag": "1",
+        "chargeDate": "2020-11-07",
+        "applyDate": ""
     }
 }

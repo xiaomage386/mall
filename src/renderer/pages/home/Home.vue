@@ -6,7 +6,7 @@
         <div id="main" v-show="!isPrint">
             <Menus slot="menus"></Menus>
             <div class="content">
-                <div class="connect"><i :class="{'err':isConnect.status == false}"  ></i><span v-text="isConnect.text">连接成功</span></div>
+                <div class="connect" :title="isConnect.text"><i :class="{'err':isConnect.status == false}"></i></div>
                 <el-form :model="ruleForm" label-position="right" :rules="rules" ref="ruleForm" label-width="110px">
                     <el-row>
                         <el-col :span="7">
@@ -23,8 +23,13 @@
                             <!-- <el-form-item label="ID" prop="hisId">
                                 <el-input v-model="hisId" id="hisIdInput" @keyup.enter.native="getHisInfoFun" @input="hisIdChange"></el-input>
                             </el-form-item> -->
-                            <el-form-item label="住院号">
+                            <el-form-item :label="clinicNumLabel">
                                 <el-input v-model="ruleForm.clinicNum"></el-input>
+                            </el-form-item>
+                            <el-form-item label="患者类型">
+                                <el-select clearable placeholder="" v-model="ruleForm.isTemporary" @change="changeTemporary">
+                                    <el-option :label="item.value" :value="item.key" v-for="(item, index) in patientTypeList" :key="item.key"></el-option>
+                                </el-select>
                             </el-form-item>
                             <el-form-item label="姓名" prop="name">
                                 <el-input v-model="ruleForm.name"></el-input>
@@ -66,9 +71,6 @@
                             <el-form-item label="BMI">
                                 <el-input v-model="BMI"></el-input>
                             </el-form-item>
-                            <el-form-item label="籍贯">
-                                <el-input v-model="ruleForm.address"></el-input>
-                            </el-form-item>
                             <div class="foot-btn">
                                 <el-button type="danger" @click="resetForm()">清空</el-button>
                                 <el-button type="primary" @click="showPrintBtn()">打印</el-button>
@@ -77,30 +79,33 @@
                         </el-col>
                         <el-col :span="7">
                             <div class="title">填写选填信息</div>
+                            <el-form-item label="申请单状态">
+                                <span style="width:100px; display: inline-block;" v-if="ruleForm.applyStatue === ''">-</span>
+                                <span style="width:100px; display: inline-block;" v-else>{{ruleForm.applyStatue}}</span>
+                                <span>
+                                    <span v-if="ruleForm.applyTime == ''">-</span>
+                                    <span v-else :title="ruleForm.applyTime">{{ruleForm.applyTime}}</span>
+                                </span>
+                            </el-form-item>
+                            <el-form-item label="缴费状态">
+                                <div style="width:100px; display: inline-block;">
+                                    <span v-if="ruleForm.chargeFlag==='0'">未缴费</span>
+                                    <span v-else-if="ruleForm.chargeFlag==='1'">已缴费</span>
+                                    <span v-else>-</span>
+                                </div>
+                                <span>
+                                    <span v-if="ruleForm.chargeDate === ''">-</span>
+                                    <span v-else :title="ruleForm.chargeDate">{{ruleForm.chargeDate}}</span>
+                                </span>
+                            </el-form-item>
+                            <el-form-item label="籍贯">
+                                <el-input v-model="ruleForm.address"></el-input>
+                            </el-form-item>
                             <el-form-item label="电话">
                                 <el-input v-model="ruleForm.mobile"></el-input>
                             </el-form-item>
                             <el-form-item label="职业">
                                 <el-input v-model="ruleForm.job"></el-input>
-                            </el-form-item>
-                            <el-form-item label="申请单状态">
-                                <el-input v-model="ruleForm.applyStatue"></el-input>
-                            </el-form-item>
-                            <el-form-item label="缴费状态">
-                                <!-- <el-select placeholder="" v-model="ruleForm.chargeFlag" @change="changeTypeSelect"> -->
-                                <el-select clearable placeholder="" v-model="ruleForm.chargeFlag">
-                                    <el-option label="已缴费" value="1"></el-option>
-                                    <el-option label="未缴费" value="0"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="缴费时间">
-                                <el-date-picker
-                                    v-model="ruleForm.chargeDate"
-                                    type="date"
-                                    value-format="yyyy-MM-dd"
-                                    :picker-options="pickerOptionsDate"
-                                    placeholder="选择日期">
-                                </el-date-picker>
                             </el-form-item>
                             <el-form-item label="既往史/过敏史">
                                 <el-input v-model="ruleForm.medicalHistory"></el-input>
@@ -136,11 +141,6 @@
                                 <el-form-item label="检测项目">
                                     <el-select placeholder="" v-model="typeSelect" @change="changeTypeSelect">
                                         <el-option :label="item.name" :value="item.type" v-for="(item, index) in reportTypeList" :key="index"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="患者类型">
-                                    <el-select clearable placeholder="" v-model="ruleForm.isTemporary">
-                                        <el-option :label="item.value" :value="item.key" v-for="(item, index) in patientTypeList" :key="item.key"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
@@ -259,6 +259,7 @@ export default {
                 quitSmoking: '',
                 remarks: '',
                 applyStatue: '', // 申请单状态
+                applyTime: '', // 申请单时间
                 chargeFlag: '', // 缴费状态 (0-否，1-是)
                 chargeDate: '', // 缴费时间
                 isTemporary: '' // 门诊/住院 v-model
@@ -317,8 +318,9 @@ export default {
                 text: '尝试连接' // 连接状态提示语
             },
             timer: null, // 定时器
-            patientTypeList: [], // 门诊/住院
-            isFocus: true // 控制是否能进行聚焦
+            patientTypeList: [], // 患者类型  门诊/住院
+            clinicNumLabel: '住院号', // 患者类型修改时，这里的字段也修改
+            isFocus: true // 控制 ID 输入框是否能进行聚焦
         }
     },
     mounted() {
@@ -420,6 +422,14 @@ export default {
                     this.$refs['ruleForm'].resetFields()
                     this.getReservationList()
                     this.measureFun()
+                    let applyTime = this.ruleForm.applyTime
+                    let applyStatue = this.ruleForm.applyStatue
+                    if (Utils.size(applyTime)) {
+                        this.ruleForm.applyTime = Utils.formatTime(Utils.formatStringTime(applyTime), 'yyyy-MM-dd')
+                    }
+                    if (Utils.size(applyStatue)) {
+                        this.ruleForm.applyStatue = Utils.formatTime(Utils.formatStringTime(applyStatue), 'yyyy-MM-dd')
+                    }
                 }, error => {
                     Popup.hideLoading()
                     patientService.NetWorkFail()
@@ -506,10 +516,6 @@ export default {
                     }
                 }
             }
-            /* if (!Utils.size(this.reservationDate)) {
-                Popup.showToast.Warning('请选择预约时间段')
-                return
-            } */
             if (isFull >= 3) {
                 Popup.showToast.Warning('此预约已满，请选择其他时间段')
                 return
@@ -521,9 +527,11 @@ export default {
         // 预约时间关闭弹窗
         dialogCloseFun() {
             this.dialogFormVisible.isVisble = false
-            this.timeSlot = ''
+            // this.timeSlot = ''
             this.i = ''
             this.reservationDate = ''
+            this.date = Utils.formatTime(Utils.getTime(), 'yyyy-MM-dd')
+            this.$refs.calendarRef.clearI()
         },
          // 查询预约时间段
         reservationInfoFun() {
@@ -573,14 +581,6 @@ export default {
             } else {
                 this.ruleForm.hisId = this.hisId
             }
-            /* if (Utils.size(this.typeSelect) == 0) {
-                Popup.showToast.Warning('请选择预约项目')
-                return false
-            }
-            if (Utils.size(this.date) == 0 || Utils.size(this.reservationDate) == 0) {
-                Popup.showToast.Warning('请选择预约时间')
-                return false
-            } */
             document.body.scrollTop = document.documentElement.scrollTop = 0;
             // this.ruleForm.hisId = undefined; // 删除 object 属性
             let _data = this.ruleForm
@@ -657,7 +657,12 @@ export default {
                 medicalHistory: '',
                 smokingVolume: '',
                 quitSmoking: '',
-                remarks: ''
+                remarks: '',
+                applyStatue: '', // 申请单状态
+                applyTime: '', // 申请单时间
+                chargeFlag: '', // 缴费状态 (0-否，1-是)
+                chargeDate: '', // 缴费时间
+                isTemporary: '' // 门诊/住院 v-model
             }
             this.List = {}
             this.isReservation = 0
@@ -810,6 +815,14 @@ export default {
                 // Popup.hideLoading()
                 // patientService.NetWorkFail()
             })
+        },
+        // 修改患者类型
+        changeTemporary(val) {
+            if (val == 2) {
+                this.clinicNumLabel = '门诊号'
+            } else {
+                this.clinicNumLabel = '住院号'
+            }
         }
     },
     // 销毁定时器
@@ -831,9 +844,9 @@ export default {
 </script>
 <style scoped lang="scss">
 .el-form-item{margin-bottom: 16px;}
-.connect{position: absolute; right: 10px; top: 10px;}
-.connect i{display: inline-block; width: 18px; height: 18px; background: #3394f5;box-shadow: 0 0 5px rgba($color: #3394f5, $alpha: 0.3); background-image: radial-gradient(#3394f5, #3394f5); border-radius: 50%; margin-right: 5px; position: relative; top: 4px;}
-.connect i.err{background:#ddd;box-shadow: 0 0 5px rgba($color: #ddd, $alpha: 0.3);}
+.connect{position: absolute; right: 10px; top: 10px;z-index: 1;}
+.connect i{display: inline-block; width: 18px; height: 18px; background: #37c51f; border-radius: 50%; margin-right: 5px; position: relative; top: 4px;}
+.connect i.err{background:#ddd;}
 .home{
     .content {
         position: relative;
