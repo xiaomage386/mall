@@ -12,7 +12,7 @@
                         <el-col :span="7">
                             <div class="title">填写基本信息</div>
                             <div class="el-form-item is-required" :class="hisIdError ? 'is-error' : ''"> <!-- is-error -->
-                                <label for="hisId" class="el-form-item__label" style="width: 100px;">ID</label>
+                                <label for="hisId" class="el-form-item__label" style="width: 100px;" v-text="appointment == '0'? '申请 ID' : '患者 ID'">申请 ID</label>
                                 <div class="el-form-item__content" style="margin-left: 109px;">
                                     <div class="el-input">
                                         <input type="text" v-model="hisId" autocomplete="off" id="hisIdInput" class="el-input__inner" @blur="hisIdChange" @keyup.enter="getHisInfoFun">
@@ -23,11 +23,11 @@
                             <!-- <el-form-item label="ID" prop="hisId">
                                 <el-input v-model="hisId" id="hisIdInput" @keyup.enter.native="getHisInfoFun" @input="hisIdChange"></el-input>
                             </el-form-item> -->
-                            <el-form-item :label="clinicNumLabel">
+                            <el-form-item label="门诊/住院号">
                                 <el-input v-model="ruleForm.clinicNum"></el-input>
                             </el-form-item>
                             <el-form-item label="患者类型">
-                                <el-select clearable placeholder="" v-model="ruleForm.isTemporary" @change="changeTemporary">
+                                <el-select clearable placeholder="" v-model="ruleForm.isTemporary">
                                     <el-option :label="item.value" :value="item.key" v-for="(item, index) in patientTypeList" :key="item.key"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -80,15 +80,15 @@
                         <el-col :span="7">
                             <div class="title">填写选填信息</div>
                             <el-form-item label="申请单状态">
-                                <span style="width:100px; display: inline-block;" v-if="ruleForm.applyStatue === ''">-</span>
-                                <span style="width:100px; display: inline-block;" v-else>{{ruleForm.applyStatue}}</span>
+                                <span style="width:65px; display: inline-block;" v-if="ruleForm.applyStatue === ''">-</span>
+                                <span style="width:65px; display: inline-block;" v-else>{{ruleForm.applyStatue}}</span>
                                 <span>
                                     <span v-if="ruleForm.applyTime == ''">-</span>
                                     <span v-else :title="ruleForm.applyTime">{{ruleForm.applyTime}}</span>
                                 </span>
                             </el-form-item>
                             <el-form-item label="缴费状态">
-                                <div style="width:100px; display: inline-block;">
+                                <div style="width:65px; display: inline-block;">
                                     <span v-if="ruleForm.chargeFlag==='0'">未缴费</span>
                                     <span v-else-if="ruleForm.chargeFlag==='1'">已缴费</span>
                                     <span v-else>-</span>
@@ -109,6 +109,9 @@
                             </el-form-item>
                             <el-form-item label="既往史/过敏史">
                                 <el-input v-model="ruleForm.medicalHistory"></el-input>
+                            </el-form-item>
+                            <el-form-item label="临床诊断">
+                                <el-input v-model="ruleForm.clinicSymptom"></el-input>
                             </el-form-item>
                             <el-form-item label="吸烟史">
                                 <el-col :span="12">
@@ -135,8 +138,13 @@
                         <el-col :span="10">
                             <div class="title">选择时间地点项目</div>
                             <el-col :span="18">
-                                <el-form-item label="检测地点">
+                                <!-- <el-form-item label="检测设备">
                                     <el-input v-model="checkAddress"></el-input>
+                                </el-form-item> -->
+                                <el-form-item label="检测设备">
+                                    <el-select placeholder="" v-model="deviceSelect" @change="changeDeviceSelect">
+                                        <el-option :label="item.deviceName" :value="item.id" v-for="(item, index) in deviceList" :key="index"></el-option>
+                                    </el-select>
                                 </el-form-item>
                                 <el-form-item label="检测项目">
                                     <el-select placeholder="" v-model="typeSelect" @change="changeTypeSelect">
@@ -151,7 +159,8 @@
                                 <el-form-item label="检测项目">
                                     <div class="type-item">
                                         <span>
-                                            <b v-for="item in reportTypeList" v-if="item.type == typeSelect">{{item.name}}</b><span> {{date}} {{timeSlot}}</span>
+                                            <b v-for="item in reportTypeList" v-if="item.type == typeSelect">{{item.name}}</b>
+                                            <span> {{date}} {{timeSlot}}</span>
                                         </span>
                                     </div>
                                 </el-form-item>
@@ -262,7 +271,8 @@ export default {
                 applyTime: '', // 申请单时间
                 chargeFlag: '', // 缴费状态 (0-否，1-是)
                 chargeDate: '', // 缴费时间
-                isTemporary: '' // 门诊/住院 v-model
+                isTemporary: '', // 门诊/住院 v-model
+                clinicSymptom: '' // 临床诊断
             },
             rules: {
                 hisId: [
@@ -311,7 +321,9 @@ export default {
                 btnClick: false,
                 btnShow: false
             },
-            typeSelect: '1', // 检测项目
+            deviceSelect: '', // 检测设备
+            typeSelect: null, // 检测项目
+            deviceList: [], // 检测设备列表
             reportTypeList: [], // 报告类型列表
             isConnect: {
                 status: false, // 是否连接成功
@@ -319,7 +331,6 @@ export default {
             },
             timer: null, // 定时器
             patientTypeList: [], // 患者类型  门诊/住院
-            clinicNumLabel: '住院号', // 患者类型修改时，这里的字段也修改
             isFocus: true // 控制 ID 输入框是否能进行聚焦
         }
     },
@@ -342,7 +353,8 @@ export default {
         this.checkAddress = localStorage.get(HOSPITAL) ? localStorage.get(HOSPITAL) : ''
         this.focusHisId()
         this.getAppointmentFn()
-        this.getReportType()
+        // this.getReportType()
+        this.getDevice()
         this.getPatientTypeList()
         this.getConnect()
         this.connectFun()
@@ -368,9 +380,27 @@ export default {
                 patientService.NetWorkFail()
             })
         },
+        // 获取检测设备
+        getDevice() {
+            patientService.deviceListAll().then(data => {
+                data || (data = {})
+                if (data['code'] != patientService.STATUS_SUCCESS) {
+                    return patientService.Warning(data['code'], data['msg'])
+                }
+                this.deviceList = data && data.list || []
+                this.getReportType(this.deviceList[0]['id'])
+            }, patientService.NetWorkFail).finally(() => {
+                this.loadingTime = setTimeout(() => {
+                    this.loading = false
+                }, 500)
+            })
+        },
         // 获取报告类型
-        getReportType() {
-            patientService.reservationType().then(data => {
+        getReportType(id) {
+            let _data = {
+                deviceId: id || ''
+            }
+            patientService.findByDevice(_data).then(data => {
                 data || (data = {})
                 if (data['code'] != patientService.STATUS_SUCCESS) {
                     return patientService.Warning(data['code'], data['msg'])
@@ -382,6 +412,17 @@ export default {
                     this.loading = false
                 }, 500)
             })
+        },
+        // 切换预约项目
+        changeTypeSelect(val) {
+            if (this.hisId === '') {
+                this.focusHisId()
+            }
+            this.delReservationFun()
+        },
+        // 切换设备
+        changeDeviceSelect(val) {
+            this.getReportType(val)
         },
         // 获取患者类型
         getPatientTypeList() {
@@ -411,6 +452,8 @@ export default {
                     }
                 }
                 Popup.showToast.Success('正在获取患者数据')
+                this.deviceSelect = '' // 检测设备
+                this.typeSelect = null // 检测项目
                 patientService.getHisInfo(_data).then(data => {
                     data || (data = {})
                     if (data['code'] != patientService.STATUS_SUCCESS) {
@@ -423,13 +466,7 @@ export default {
                     this.getReservationList()
                     this.measureFun()
                     let applyTime = this.ruleForm.applyTime
-                    let applyStatue = this.ruleForm.applyStatue
-                    if (Utils.size(applyTime)) {
-                        this.ruleForm.applyTime = Utils.formatTime(Utils.formatStringTime(applyTime), 'yyyy-MM-dd')
-                    }
-                    if (Utils.size(applyStatue)) {
-                        this.ruleForm.applyStatue = Utils.formatTime(Utils.formatStringTime(applyStatue), 'yyyy-MM-dd')
-                    }
+                    let chargeDate = this.ruleForm.chargeDate
                 }, error => {
                     Popup.hideLoading()
                     patientService.NetWorkFail()
@@ -585,7 +622,7 @@ export default {
             // this.ruleForm.hisId = undefined; // 删除 object 属性
             let _data = this.ruleForm
             let time = this.date + ' ' + this.reservationDate;
-            this.reservationApplys = [{'checkProject': this.typeSelect, 'applyDate': time}]
+            this.reservationApplys = [{'checkProject': this.typeSelect, 'applyDate': time, 'deviceId': this.deviceSelect}]
             _data.reservationApplys = this.reservationApplys
             patientService.reservationSave(_data).then(data => {
                 data || (data = {})
@@ -662,17 +699,15 @@ export default {
                 applyTime: '', // 申请单时间
                 chargeFlag: '', // 缴费状态 (0-否，1-是)
                 chargeDate: '', // 缴费时间
-                isTemporary: '' // 门诊/住院 v-model
+                isTemporary: '', // 门诊/住院 v-model
+                clinicSymptom: '' // 临床诊断
             }
+            this.deviceSelect = '' // 检测设备
+            this.typeSelect = null // 检测项目
             this.List = {}
             this.isReservation = 0
-            // this.reservationApplys = []
-            // this.typeSelect = ''
-            // this.date = ''
-            // this.timeSlot = ''
             this.reservationArray = []
             this.age = ''
-            // this.BMI = ''
             this.i = ''
             this.hisId = ''
             this.gender = ''
@@ -724,13 +759,6 @@ export default {
             this.calDate = val
             this.changeTypeSelect(val)
         },
-        // 切换预约项目
-        changeTypeSelect(val) {
-            if (this.hisId === '') {
-                this.focusHisId()
-            }
-            this.delReservationFun()
-        },
         // 计算年龄
         timeChange() {
             if (this.ruleForm.birthday) {
@@ -746,20 +774,20 @@ export default {
         timeFun () {
             for (var i = 0; i < this.array.length; i++) {
                 this.array[i].index = i;
-                if (i == 0) this.array[i].time = '08:01:00';
-                if (i == 1) this.array[i].time = '08:31:00';
-                if (i == 2) this.array[i].time = '09:01:00';
-                if (i == 3) this.array[i].time = '09:31:00';
-                if (i == 4) this.array[i].time = '10:01:00';
-                if (i == 5) this.array[i].time = '10:31:00';
-                if (i == 6) this.array[i].time = '11:01:00';
-                if (i == 7) this.array[i].time = '13:01:00';
-                if (i == 8) this.array[i].time = '13:31:00';
-                if (i == 9) this.array[i].time = '14:01:00';
-                if (i == 10) this.array[i].time = '14:31:00';
-                if (i == 11) this.array[i].time = '15:01:00';
-                if (i == 12) this.array[i].time = '15:31:00';
-                if (i == 13) this.array[i].time = '16:01:00';
+                if (i == 0) this.array[i].time = '08:29:00';
+                if (i == 1) this.array[i].time = '08:59:00';
+                if (i == 2) this.array[i].time = '09:29:00';
+                if (i == 3) this.array[i].time = '09:59:00';
+                if (i == 4) this.array[i].time = '10:29:00';
+                if (i == 5) this.array[i].time = '10:59:00';
+                if (i == 6) this.array[i].time = '11:29:00';
+                if (i == 7) this.array[i].time = '13:29:00';
+                if (i == 8) this.array[i].time = '13:59:00';
+                if (i == 9) this.array[i].time = '14:29:00';
+                if (i == 10) this.array[i].time = '14:59:00';
+                if (i == 11) this.array[i].time = '15:29:00';
+                if (i == 12) this.array[i].time = '15:59:00';
+                if (i == 13) this.array[i].time = '16:29:00';
                 if (Utils.size(this.array[i].list) == 0) { this.array[i].list.push(''); this.array[i].list.push(''); this.array[i].list.push(''); }
                 if (Utils.size(this.array[i].list) == 1) { this.array[i].list.push(''); this.array[i].list.push(''); }
                 if (Utils.size(this.array[i].list) == 2) { this.array[i].list.push(''); }
@@ -815,14 +843,6 @@ export default {
                 // Popup.hideLoading()
                 // patientService.NetWorkFail()
             })
-        },
-        // 修改患者类型
-        changeTemporary(val) {
-            if (val == 2) {
-                this.clinicNumLabel = '门诊号'
-            } else {
-                this.clinicNumLabel = '住院号'
-            }
         }
     },
     // 销毁定时器
