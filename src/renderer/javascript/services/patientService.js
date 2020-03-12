@@ -118,10 +118,24 @@ class PatientService extends BaseService {
     }
 
     /**
+     * 获取设备列表
+     */
+    deviceListAll(config = {}) {
+        return this.httpClientJson.post('api.device.listAll', config)
+    }
+
+    /**
      * 获取报告类型
      */
     reservationType(config = {}) {
         return this.httpClientJson.post('api.reporttemplate.reservationType', config)
+    }
+
+    /**
+     * 获取报告类型
+     */
+    findByDevice(config = {}) {
+        return this.httpClientJson.post('api.reporttemplate.findByDevice', config)
     }
 
     /**
@@ -136,6 +150,13 @@ class PatientService extends BaseService {
      */
     connect(config = {}) {
         return this.httpClientJson.post('api.sysConfig.connect', config)
+    }
+
+    /**
+     * 取消预约
+     */
+    cancelApplyFun(config = {}) {
+        return this.httpClientJson.post('api.reservationApply.cancel', config)
     }
 
     /***
