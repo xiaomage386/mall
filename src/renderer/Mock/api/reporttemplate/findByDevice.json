@@ -1,0 +1,61 @@
+{
+    "msg": "success",
+    "code": 0,
+    "list": [
+        {
+            "id": 1,
+            "name": "常规通气",
+            "keyMatch": "JAEGER TOENNIES1-1",
+            "modPosition": "{\"hospitalName\":\"50,0,60,10000\",\"reportName\":\"98,0,110,10000\",\"patientInfo\":\"119,0,175,10000\",\"parameter\":\"380,0,683,10000\",\"notes\":\"697,0,816,10000\"}",
+            "type": "1",
+            "paraColPosition": "{\"name\":\"0\",\"unit\":\"1\",\"pre\":\"2\",\"devide\":\"4\",\"data\":{\"2\":\"1#99\",\"3\":\"1#1\",\"4\":\"1#90\"}}",
+            "remake": "1",
+            "typeNote": "Spirometry",
+            "typeId": 1
+        },
+        {
+            "id": 16,
+            "name": "复苏功率激发",
+            "keyMatch": "JAEGER TOENNIES3-2",
+            "modPosition": "{\"hospitalName\":\"72,0,85,10000\",\"reportName\":\"109,0,118,10000\",\"patientInfo\":\"128,0,178,10000\",\"parameter\":\"415,0,630,10000\",\"notes\":\"666,0,808,10000\"}",
+            "type": "41",
+            "paraColPosition": "{\"name\":\"0\",\"pre\":\"1\",\"data\":{\"1\":\"1#99\",\"2\":\"1#1\",\"3\":\"1#90\",\"4\":\"1#2\",\"5\":\"1#91\",\"6\":\"1#96\",\"7\":\"1#3\",\"8\":\"1#98\"}}",
+            "remake": "20",
+            "typeNote": "Motion",
+            "typeId": 5
+        },
+        {
+            "id": 3,
+            "name": "激发试验",
+            "keyMatch": "JAEGER TOENNIES4-1",
+            "modPosition": "{\"hospitalName\":\"62,0,75,10000\",\"reportName\":\"99,0,110,10000\",\"patientInfo\":\"115,0,168,10000\",\"parameter\":\"516,0,609,10000\",\"notes\":\"609,0,779,10000\"}",
+            "type": "20",
+            "paraColPosition": "{\"name\":\"0\",\"data\":{\"1\":\"1#97\",\"2\":\"1#1\",\"3\":\"2#1\",\"4\":\"3#1\",\"5\":\"4#1\",\"6\":\"5#1\",\"7\":\"6#1\",\"8\":\"7#1\",\"9\":\"8#1\",\"10\":\"9#1\",\"11\":\"10#1\",\"12\":\"11#1\",\"13\":\"12#1\"}}",
+            "remake": "2",
+            "typeNote": "Bronchial Challenge",
+            "typeId": 3
+        },
+        {
+            "id": 24,
+            "name": "临床研究报告",
+            "keyMatch": "JAEGER TOENNIES9-2",
+            "modPosition": "{\"hospitalName\":\"37,0,55,10000\",\"reportName\":\"73,0,82,10000\",\"patientInfo\":\"88,0,140,10000\",\"parameter\":\"455,0,721,10000\",\"notes\":\"755,0,819,10000\"}",
+            "type": "50",
+            "paraColPosition": "{\"name\":\"0\",\"pre\":\"1\",\"data\":{\"1\":\"1#99\",\"2\":\"1#1\",\"3\":\"2#1\",\"4\":\"3#1\",\"5\":\"4#1\",\"6\":\"5#1\",\"7\":\"6#1\",\"8\":\"7#1\",\"9\":\"8#1\",\"10\":\"9#1\",\"11\":\"10#1\"}}",
+            "remake": "7",
+            "typeNote": "Research",
+            "typeId": 6
+        },
+        {
+            "id": 30,
+            "name": "通气弥散残气内",
+            "keyMatch": "JAEGER TOENNIES2-2",
+            "modPosition": "{\"hospitalName\":\"46,0,56,10000\",\"reportName\":\"64,0,74,10000\",\"patientInfo\":\"95,0,147,10000\",\"parameter\":\"320,0,653,10000\",\"notes\":\"678,0,778,10000\"}",
+            "type": "61",
+            "paraColPosition": "{\"name\":\"0\",\"unit\":\"1\",\"pre\":\"2\",\"data\":{\"2\":\"1#99\",\"3\":\"1#1\"}}",
+            "remake": "16",
+            "typeNote": "NO Diffusion Membrane",
+            "typeId": 7
+        }
+    ]
+}
