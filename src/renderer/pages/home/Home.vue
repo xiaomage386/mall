@@ -168,7 +168,8 @@
                             <el-col :span="24">
                                 <el-form-item label="预约信息" class="re-scroll" v-if="List.length > 0">
                                     <div class="box">
-                                        <div class="re-info" v-for="(item, index) in List" :key="index"><b v-for="item in reportTypeList" v-if="item.type == typeSelect">{{item.name}}</b> {{item.applyDate}} <span @click="readPrint(item.id)">查看</span></div>
+                                        <div class="re-info" v-for="(item, index) in List" :key="index">
+                                        <b>{{item.projectName}}</b> {{item.applyDate}} <span @click="readPrint(item.id)">查看</span></div>
                                     </div>
                                 </el-form-item>
                             </el-col>
@@ -461,6 +462,7 @@ export default {
                         return data
                     }
                     this.ruleForm = data.object || {}
+                    this.updateTime()
                     this.timeChange()
                     this.$refs['ruleForm'].resetFields()
                     this.getReservationList()
@@ -564,7 +566,6 @@ export default {
         // 预约时间关闭弹窗
         dialogCloseFun() {
             this.dialogFormVisible.isVisble = false
-            // this.timeSlot = ''
             this.i = ''
             this.reservationDate = ''
             this.date = Utils.formatTime(Utils.getTime(), 'yyyy-MM-dd')
@@ -612,7 +613,6 @@ export default {
             if (!does) {
                 return false
             }
-            this.updateTime()
             if (this.appointment == '0') {
                 this.ruleForm.applyID = this.hisId
             } else {
@@ -621,6 +621,10 @@ export default {
             document.body.scrollTop = document.documentElement.scrollTop = 0;
             // this.ruleForm.hisId = undefined; // 删除 object 属性
             let _data = this.ruleForm
+            // 清空之后时间被被清空了
+            if (!Utils.size(this.reservationDate)) {
+                this.reservationDate = Utils.formatTime(Utils.getTime(), 'hh:mm:ss')
+            }
             let time = this.date + ' ' + this.reservationDate;
             this.reservationApplys = [{'checkProject': this.typeSelect, 'applyDate': time, 'deviceId': this.deviceSelect}]
             _data.reservationApplys = this.reservationApplys
@@ -649,12 +653,7 @@ export default {
                         this.isPrint = true
                     }
                 })
-                // 清除预约时间段（防止重复提交）
-                // this.delReservationFun()
-                // this.date = ''
-                // this.typeSelect = ''
                 this.calIndex = ''
-                // this.timeSlot = ''
                 this.weightBtn.btnShow = false
             }, error => {
                 Popup.hideLoading()
@@ -1012,12 +1011,10 @@ export default {
 }
 .re-info span{padding-left: 5px;}
 .re-scroll{
-    height: 100px;
-    overflow: auto;
     line-height: 1;
     margin-bottom: 0;
 }
-.re-scroll .box{cursor: default;}
+.re-scroll .box{cursor: default;width: 100%;height: 100px; overflow: auto; white-space: nowrap;}
 .re-scroll .box span{cursor: pointer;}
 .re-scroll .box span:hover{color: #3394f5;}
 </style>
