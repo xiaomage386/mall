@@ -27,20 +27,20 @@
             <div class="title">
                 <div class="barcode" id="div128"></div>
                 <h3 v-text="tableData.hospitalName">-</h3>
-                <!-- <span>{{tableData.checkProject == 0 ? '常规肺功能' : '激发试验'}}检查单</span> -->
-                <span v-for="item in reportTypeList" v-if="item.type == tableData.checkProject">{{item.name}}</span>
+                <span v-text="tableData.projectName">-</span>
                 <span class="time">打印日期： {{nowTime}}</span>
             </div>
             <div class="print-table">
                 <table>
-                    <tr><th>HIS ID:</th><td v-text="tableData.hisId"></td><th>住院号：</th><td v-text="tableData.clinicNum"></td><th>申请号：</th><td v-text="tableData.reservationNumber"></td></tr>
-                    <tr><th>患者ID：</th><td v-text="tableData.id"></td><th>姓名：</th><td v-text="tableData.name"></td><th>性别：</th><td v-text="tableData.gender == '0' ? '男' : '女'"></td></tr>
+                    <tr><th>申请单ID：</th><td v-text="tableData.applyId"></td><th>患者ID：</th><td v-text="tableData.hisId"></td><th>门诊/住院号 ：</th><td v-text="tableData.clinicNum"></td></tr>
+                    <tr><th>姓名：</th><td v-text="tableData.name"></td><th>类型：</th><td v-text="tableData.temporary"></td><th>性别：</th><td v-text="tableData.gender == '0' ? '男' : '女'"></td></tr>
                     <tr><th>体重：</th><td><span v-text="tableData.weight"></span> kg</td><th>身高：</th><td><span v-text="tableData.height"></span> cm</td><th>BMI：</th><td v-text="bmi"></td></tr>
                     <tr><th>出生日期：</th><td v-text="tableData.birthday"></td><th>年龄：</th><td><span v-text="age"></span> 岁</td><th>电话：</th><td v-text="tableData.mobile"></td></tr>
                     <tr><th>职业：</th><td v-text="tableData.job"></td><th>吸烟史：</th><td><span v-text="tableData.smokingHistory"></span> 年</td><th>吸烟量：</th><td><span v-text="tableData.smokingVolume"></span> 支/天</td></tr>
                     <tr><th>已戒烟：</th><td><span v-text="tableData.quitSmoking"></span> 年</td><th>既往史/过敏史：</th><td>{{tableData.medicalHistory}}</td><th>检查时间：</th><td v-text="tableData.applyDate"></td></tr>
                     <tr><th>申请单状态：</th><td><span v-text="tableData.applyStatue"></span></td><th>缴费状态：</th><td><span v-if="tableData.chargeFlag === '0'">未缴费</span><span v-if="tableData.chargeFlag === '1'">已缴费</span></td><th>缴费时间：</th><td v-text="tableData.chargeDate"></td></tr>
-                    <tr><th>检查项目：</th><td><span v-for="item in reportTypeList" v-if="item.type == tableData.checkProject">{{item.name}}</span></td><th>籍贯：</th><td colspan="3" v-text="tableData.address"></td></tr>
+                    <tr><th>检查项目：</th><td v-text="tableData.projectName"></td><th>临床诊断：</th><td colspan="3"><span>{{tableData.clinicSymptom}}</span></td></tr>
+                    <tr><th>设备：</th><td><span v-text="tableData.deviceName"></span></td><th>籍贯：</th><td colspan="3" v-text="tableData.address"></td></tr>
                     <tr><th>备注：</th><td colspan="5"><span>{{tableData.remarks}}</span></td></tr>
                     <tr><td colspan="6" style="height: 700px;"></td></tr>
                 </table>
@@ -137,7 +137,7 @@ export default {
                 mobile: '',
                 name: '',
                 quitSmoking: '',
-                reservationNumber: '',
+                applyId: '',
                 smokingHistory: '',
                 smokingVolume: '',
                 weight: ''
@@ -168,7 +168,7 @@ export default {
                 this.tableData = data.object
                 this.age = this.timeChange(this.tableData.birthday)
                 this.setBMI()
-                document.getElementById('div128').innerHTML = code128(this.tableData.reservationNumber, 'B');
+                document.getElementById('div128').innerHTML = code128(this.tableData.applyId, 'B');
             }, error => {
                 Popup.hideLoading()
                 patientService.NetWorkFail()

@@ -251,7 +251,6 @@ export default {
             },
             hisId: '',
             hisIdError: false, // 判断 ID 输入框是否为空
-            gender: '', // 性别
             ruleForm: {
                 hisId: '',
                 applyID: '',
@@ -709,7 +708,6 @@ export default {
             this.age = ''
             this.i = ''
             this.hisId = ''
-            this.gender = ''
             this.calIndex = ''
             this.calDate = ''
             this.$refs.calendarRef.clearI()
