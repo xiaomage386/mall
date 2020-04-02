@@ -176,7 +176,9 @@ export default {
                     localStorage.set(COOKIE_CLAUSE, true);
                     localStorage.set(LOGIN_NAME, _data.username)
                     // 连接状态的获取接口间隔时长
-                    localStorage.set(CONNECT_STATUS, data.object.connectDate)
+                    if (data.object.connectDate) {
+                        localStorage.set(CONNECT_STATUS, data.object.connectDate)
+                    }
                     Popup.showToast.Success('登录成功！')
                     // 同步数据到本地服务
                     /* if (this.radio == 2) {

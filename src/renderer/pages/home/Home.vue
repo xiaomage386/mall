@@ -356,7 +356,6 @@ export default {
         // this.getReportType()
         this.getDevice()
         this.getPatientTypeList()
-        this.getConnect()
         this.connectFun()
     },
     methods: {
@@ -811,7 +810,7 @@ export default {
         connectFun() {
             let time = localStorage.get(CONNECT_STATUS)
             this.getConnect()
-            if (time) {
+            if (Utils.size(time)) {
                 this.timer = setTimeout(this.connectFun, parseFloat(time) * 1000);
             }
         },
