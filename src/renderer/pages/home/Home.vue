@@ -60,22 +60,24 @@
                                     placeholder="选择日期">
                                 </el-date-picker>
                             </el-form-item>
-                            <el-form-item label="身高" prop="height">
-                                <el-col :span="12">
-                                    <el-input v-model="ruleForm.height"></el-input>
+                            <el-col :span="24" class="clearfix">
+                                <el-col :span="13">
+                                    <el-form-item label="身高" prop="height">
+                                        <el-input v-model="ruleForm.height"></el-input>
+                                    </el-form-item>
                                 </el-col>
-                                <el-col :span="12">&nbsp;cm <el-button :disabled="weightBtn.btnClick" v-show="!weightBtn.btnShow" @click="measureFunClick" size="small">测量</el-button></el-col>
-                            </el-form-item>
+                                <el-col :span="2" class="line"><span>kg</span></el-col>
+                                <el-col :span="9">
+                                    <el-form-item label="BMI" label-width="45px">
+                                        <el-input v-model="BMI"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </el-col>
                             <el-form-item label="体重" prop="weight">
                                 <el-col :span="12">
                                     <el-input v-model="ruleForm.weight"></el-input>
                                 </el-col>
-                                <el-col :span="12">&nbsp;kg</el-col>
-                            </el-form-item>
-                            <el-form-item label="BMI">
-                                <el-col :span="12">
-                                    <el-input v-model="BMI"></el-input>
-                                </el-col>
+                                <el-col :span="12">&nbsp;cm <el-button :disabled="weightBtn.btnClick" v-show="!weightBtn.btnShow" @click="measureFunClick" size="small">测量</el-button></el-col>
                             </el-form-item>
                         </el-col>
                         <el-col :span="7">
