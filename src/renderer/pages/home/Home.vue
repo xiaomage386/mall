@@ -31,9 +31,19 @@
                                     <el-option :label="item.value" :value="item.key" v-for="(item, index) in patientTypeList" :key="item.key"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="姓名" prop="name">
-                                <el-input v-model="ruleForm.name"></el-input>
-                            </el-form-item>
+                            <el-col :span="24" class="clearfix">
+                                <el-col :span="13">
+                                    <el-form-item label="姓名" prop="name">
+                                        <el-input v-model="ruleForm.name"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="9">
+                                    <el-form-item label="年龄" label-width="50px">
+                                        <el-input v-model="age"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="2" class="line"><span>岁</span></el-col>
+                            </el-col>
                             <el-form-item label="性别" prop="gender">
                                 <el-radio-group v-model="ruleForm.gender">
                                     <el-radio label="0">男</el-radio>
@@ -50,35 +60,70 @@
                                     placeholder="选择日期">
                                 </el-date-picker>
                             </el-form-item>
-                            <el-form-item label="年龄">
-                                <el-col :span="12">
-                                    <el-input v-model="age"></el-input>
-                                </el-col>
-                                <el-col :span="12">岁</el-col>
-                            </el-form-item>
                             <el-form-item label="身高" prop="height">
                                 <el-col :span="12">
                                     <el-input v-model="ruleForm.height"></el-input>
                                 </el-col>
-                                <el-col :span="12">cm <el-button :disabled="!weightBtn.btnClick" v-show="weightBtn.btnShow" @click="measureFunClick" size="small">测量</el-button></el-col>
+                                <el-col :span="12">&nbsp;cm <el-button :disabled="weightBtn.btnClick" v-show="!weightBtn.btnShow" @click="measureFunClick" size="small">测量</el-button></el-col>
                             </el-form-item>
                             <el-form-item label="体重" prop="weight">
                                 <el-col :span="12">
                                     <el-input v-model="ruleForm.weight"></el-input>
                                 </el-col>
-                                <el-col :span="12">kg</el-col>
+                                <el-col :span="12">&nbsp;kg</el-col>
                             </el-form-item>
                             <el-form-item label="BMI">
-                                <el-input v-model="BMI"></el-input>
+                                <el-col :span="12">
+                                    <el-input v-model="BMI"></el-input>
+                                </el-col>
                             </el-form-item>
-                            <div class="foot-btn">
-                                <el-button type="danger" @click="resetForm()">清空</el-button>
-                                <el-button type="primary" @click="showPrintBtn()">打印</el-button>
-                                <el-button type="primary" @click="reservationSaveFun('ruleForm')">提交</el-button>
-                            </div>
                         </el-col>
                         <el-col :span="7">
                             <div class="title">填写选填信息</div>
+                            <el-col :span="24" class="clearfix">
+                                <el-col :span="14">
+                                    <el-form-item label="籍贯">
+                                        <el-input v-model="ruleForm.address"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="10">
+                                    <el-form-item label="职业" label-width="50px">
+                                        <el-input v-model="ruleForm.job"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </el-col>
+                            <el-form-item label="电话">
+                                <el-input v-model="ruleForm.mobile"></el-input>
+                            </el-form-item>
+                            <el-form-item label="既往史/过敏史">
+                                <el-input v-model="ruleForm.medicalHistory"></el-input>
+                            </el-form-item>
+                            <el-form-item label="临床诊断">
+                                <el-input v-model="ruleForm.clinicSymptom"></el-input>
+                            </el-form-item>
+                            <el-col :span="24" class="clearfix">
+                                <el-col :span="11">
+                                    <el-form-item label="吸烟史">
+                                        <el-input v-model="ruleForm.smokingHistory"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="2" class="line"><span>年</span></el-col>
+                                <el-col :span="8">
+                                    <el-form-item label="吸烟量" label-width="60px">
+                                        <el-input v-model="ruleForm.smokingVolume"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="3" class="line"><span>支/天</span></el-col>
+                            </el-col>
+                            <el-form-item label="已戒烟">
+                                <el-col :span="12">
+                                    <el-input v-model="ruleForm.quitSmoking"></el-input>
+                                </el-col>
+                                <el-col :span="12">&nbsp;年</el-col>
+                            </el-form-item>
+                            <el-form-item label="备注">
+                                <el-input type="textarea" v-model="ruleForm.remarks"></el-input>
+                            </el-form-item>
                             <el-form-item label="申请单状态">
                                 <span style="width:65px; display: inline-block;" v-if="ruleForm.applyStatue === ''">-</span>
                                 <span style="width:65px; display: inline-block;" v-else>{{ruleForm.applyStatue}}</span>
@@ -97,42 +142,6 @@
                                     <span v-if="ruleForm.chargeDate === ''">-</span>
                                     <span v-else :title="ruleForm.chargeDate">{{ruleForm.chargeDate}}</span>
                                 </span>
-                            </el-form-item>
-                            <el-form-item label="籍贯">
-                                <el-input v-model="ruleForm.address"></el-input>
-                            </el-form-item>
-                            <el-form-item label="电话">
-                                <el-input v-model="ruleForm.mobile"></el-input>
-                            </el-form-item>
-                            <el-form-item label="职业">
-                                <el-input v-model="ruleForm.job"></el-input>
-                            </el-form-item>
-                            <el-form-item label="既往史/过敏史">
-                                <el-input v-model="ruleForm.medicalHistory"></el-input>
-                            </el-form-item>
-                            <el-form-item label="临床诊断">
-                                <el-input v-model="ruleForm.clinicSymptom"></el-input>
-                            </el-form-item>
-                            <el-form-item label="吸烟史">
-                                <el-col :span="12">
-                                    <el-input v-model="ruleForm.smokingHistory"></el-input>
-                                </el-col>
-                                <el-col :span="12">年</el-col>
-                            </el-form-item>
-                            <el-form-item label="吸烟量">
-                                <el-col :span="12">
-                                    <el-input v-model="ruleForm.smokingVolume"></el-input>
-                                </el-col>
-                                <el-col :span="12">支/天</el-col>
-                            </el-form-item>
-                            <el-form-item label="已戒烟">
-                                <el-col :span="12">
-                                    <el-input v-model="ruleForm.quitSmoking"></el-input>
-                                </el-col>
-                                <el-col :span="12">年</el-col>
-                            </el-form-item>
-                            <el-form-item label="备注">
-                                <el-input type="textarea" v-model="ruleForm.remarks"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="10">
@@ -165,14 +174,14 @@
                                     </div>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="24">
+                            <!--预约历史<el-col :span="24">
                                 <el-form-item label="预约信息" class="re-scroll" v-if="List.length > 0">
                                     <div class="box">
                                         <div class="re-info" v-for="(item, index) in List" :key="index">
                                         <b>{{item.projectName}}</b> {{item.applyDate}} <span @click="readPrint(item.id)">查看</span></div>
                                     </div>
                                 </el-form-item>
-                            </el-col>
+                            </el-col>-->
                         </el-col>
                     </el-row>
                 </el-form>
@@ -210,6 +219,11 @@
                         <el-button type="primary" @click="dialogFun">确定</el-button>
                     </div>
                 </el-dialog>
+            </div>
+            <div class="foot-btn">
+                <el-button type="danger" @click="resetForm()">清空</el-button>
+                <el-button type="primary" @click="showPrintBtn()">打印</el-button>
+                <el-button type="primary" @click="reservationSaveFun('ruleForm')">提交</el-button>
             </div>
         </div>
         <printing ref="printRef" v-show="isPrint" :printID="printID" :reportTypeList="reportTypeList" @close="closePrint"></printing>
@@ -463,7 +477,7 @@ export default {
                     this.updateTime()
                     this.timeChange()
                     this.$refs['ruleForm'].resetFields()
-                    this.getReservationList()
+                    // this.getReservationList()
                     this.measureFun()
                     let applyTime = this.ruleForm.applyTime
                     let chargeDate = this.ruleForm.chargeDate
@@ -868,6 +882,7 @@ export default {
         position: relative;
         padding: 16px 0 0;
         padding-left: 65px;
+        padding-bottom: 60px;
         .foot{
             position: fixed;left: 65px;right: 0;bottom: 20px;text-align: center;font-size: 14px;color: #666666;}
     }
@@ -901,7 +916,7 @@ export default {
         position: relative;
         background: #3394f5;
         color: #fff;
-        padding: 16px 16px 16px;
+        padding: 0px 16px 0px;
         border-radius: 5px;
         line-height: 1;
         margin-bottom: 5px;
@@ -967,10 +982,15 @@ export default {
             }
         }
     }
-    .foot-btn{
-        padding: 0 16px;
-        text-align: right;
-    }
+}
+.foot-btn{
+    padding: 10px 16px;
+    text-align: center;
+    position: fixed;
+    left: 0;
+    bottom: 0px;
+    width: 100%;
+    background: #fff;
 }
 .home-head{
     position: relative;
@@ -1014,4 +1034,9 @@ export default {
 .re-scroll .box{cursor: default;width: 100%;height: 100px; overflow: auto; white-space: nowrap;}
 .re-scroll .box span{cursor: pointer;}
 .re-scroll .box span:hover{color: #3394f5;}
+.el-col span{display: inline-block; line-height: 40px; font-size: 14px; padding-left: 5px;}
+.home .el-col .el-col{padding-right: 0; }
+</style>
+<style>
+.el-input__inner{padding: 0 8px;}
 </style>
