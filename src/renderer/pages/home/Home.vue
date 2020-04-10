@@ -210,7 +210,7 @@
                                 <table>
                                     <tr v-for='(value, index) in item' :key="index">
                                         <th :class="{blue:i===value.index}" @click="timeSlotFun(value)">{{value.timeSlot}}</th>
-                                        <td v-for='(tds, index) in value.list' :key="index" v-if="index < 3">{{tds.name}}</td>
+                                        <td v-for='(tds, index) in value.list' :key="index" v-if="index < 3"><span>{{tds.name}}</span></td>
                                     </tr>
                                 </table>
                             </el-col>
@@ -981,6 +981,14 @@ export default {
             td{
                 text-align: center;
                 width: 65px;
+                span{
+                    width: 65px;
+                    overflow: hidden;
+                    display: inline-block;
+                    word-break: break-all;
+                    line-height: 1;
+                    padding-left:0;
+                }
             }
         }
     }
