@@ -77,7 +77,7 @@
                                 <el-col :span="12">
                                     <el-input v-model="ruleForm.weight"></el-input>
                                 </el-col>
-                                <el-col :span="12">&nbsp;cm <el-button :disabled="weightBtn.btnClick" v-show="!weightBtn.btnShow" @click="measureFunClick" size="small">测量</el-button></el-col>
+                                <el-col :span="12">&nbsp;cm <el-button :disabled="!weightBtn.btnClick" v-show="weightBtn.btnShow" @click="measureFunClick" size="small">测量</el-button></el-col>
                             </el-form-item>
                         </el-col>
                         <el-col :span="7">
